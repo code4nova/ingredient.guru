@@ -36,15 +36,15 @@ CREATE TABLE import.food_nutr (
 );
 
 COPY import.food_groups		
-FROM '/home/abuchholz/Postgres/raw_data/food_groups.csv'		
+FROM '$PWD/raw_data/food_groups.csv'		
 WITH DELIMITER ',' HEADER CSV ENCODING 'LATIN1';		
 		
 COPY import.food_desc		
-FROM '/home/abuchholz/Postgres/raw_data/food_description.csv'	
+FROM '$PWD/raw_data/food_description.csv'	
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
 COPY import.food_nutr
-FROM '/home/abuchholz/Postgres/raw_data/food_nutrition.csv'
+FROM '$PWD/raw_data/food_nutrition.csv'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 --Authorized Group Table 
 DROP TABLE IF EXISTS authorized_groups CASCADE;
@@ -81,7 +81,5 @@ WHERE groupid in (0300,2100,2200,2500,3600);
 
 --Delete Brand Names
 DELETE FROM authorized_foods
-        WHERE long_desc ~ '[A-Z]+[A-Z]'
-        AND long_desc ~ 'USDA';
-SELECT * FROm authorized_foods
-        WHERE long_desc ~ '[A-Z]+[A-Z]';
+        WHERE long_desc ~ '[A-Z]{2,}'
+        AND NOT long_desc ~ 'USDA';

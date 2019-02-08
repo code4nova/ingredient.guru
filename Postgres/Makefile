@@ -1,17 +1,15 @@
-DB=abuchholz
+DB=ingredientguru
 BUILD=${CURDIR}/build.sql
 SCRIPTS=${CURDIR}/
-#CSV='${CURDIR}/master_plan.csv'
 MASTER=$(SCRIPTS)/import.sql
 NORMALIZE = $(SCRIPTS)/normalize.sql 
 
 all: normalize
-	psql $(DB) -f $(BUILD)
+	cat $(BUILD) | envsubst | psql $(DB)
 
-master:
+
+import: 
 	@cat $(MASTER) >> $(BUILD)
-
-import: master
 
 normalize: import
 	@cat $(NORMALIZE) >> $(BUILD)

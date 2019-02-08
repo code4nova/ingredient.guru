@@ -33,5 +33,5 @@ WHERE groupid in (0300,2100,2200,2500,3600);
 
 --Delete Brand Names
 DELETE FROM authorized_foods
-        WHERE long_desc ~ '[A-Z]+[A-Z]'
-        AND long_desc ~ 'USDA';
+        WHERE long_desc ~ '[A-Z]{2,}'
+        AND NOT long_desc ~ 'USDA';

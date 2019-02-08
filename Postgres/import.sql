@@ -36,13 +36,13 @@ CREATE TABLE import.food_nutr (
 );
 
 COPY import.food_groups		
-FROM '/home/abuchholz/Postgres/raw_data/food_groups.csv'		
+FROM '$PWD/raw_data/food_groups.csv'		
 WITH DELIMITER ',' HEADER CSV ENCODING 'LATIN1';		
 		
 COPY import.food_desc		
-FROM '/home/abuchholz/Postgres/raw_data/food_description.csv'	
+FROM '$PWD/raw_data/food_description.csv'	
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
 COPY import.food_nutr
-FROM '/home/abuchholz/Postgres/raw_data/food_nutrition.csv'
+FROM '$PWD/raw_data/food_nutrition.csv'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
