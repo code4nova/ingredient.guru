@@ -5,15 +5,14 @@ MASTER=$(SCRIPTS)/import.sql
 NORMALIZE = $(SCRIPTS)/normalize.sql 
 
 all: normalize
-	cat $(BUILD) | envsubst | psql $(DB)
+		cat $(BUILD) | envsubst | psql $(DB)
 
 
-import: 
-	@cat $(MASTER) >> $(BUILD)
+import:
+		@cat $(MASTER) >> $(BUILD)
 
 normalize: import
-	@cat $(NORMALIZE) >> $(BUILD)
+		@cat $(NORMALIZE) >> $(BUILD)
 
 clean:
-	@rm -rf $(BUILD)
-
+		@rm -rf $(BUILD)

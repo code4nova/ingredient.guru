@@ -61,6 +61,9 @@ and   fdgrp_cd::int  != 2500
 and   fdgrp_cd::int  != 3600
 ORDER BY fdgrp_cd::int;
 
+ALTER TABLE authorized_groups 
+ADD id serial primary key;
+
 
 --Authorized Food Name/Desc
 DROP TABLE IF EXISTS authorized_foods CASCADE;
@@ -83,3 +86,4 @@ WHERE groupid in (0300,2100,2200,2500,3600);
 DELETE FROM authorized_foods
         WHERE long_desc ~ '[A-Z]{2,}'
         AND NOT long_desc ~ 'USDA';
+
