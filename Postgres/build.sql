@@ -72,7 +72,17 @@ CREATE TABLE authorized_foods(
         foodid          SERIAL PRIMARY KEY, 
         groupid         INT,
         long_desc       TEXT,
-        shrt_desc       TEXT
+        shrt_desc       TEXT,
+        commonname      TEXT,
+        manufacname     TEXT,
+        survey          TEXT,
+        ref_desc        TEXT,
+        refuse          TEXT,
+        sciname         TEXT,
+        n_factor        TEXT,
+        pro_factor      TEXT,
+        fat_factor      TEXT,
+        cho_factor      TEXT
 );
 
 
