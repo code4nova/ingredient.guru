@@ -48,4 +48,9 @@ WHERE groupid in (0300,2100,2200,2500,3600);
 DELETE FROM authorized_foods
         WHERE long_desc ~ '[A-Z]{2,}'
         AND NOT long_desc ~ 'USDA';
-
+/*
+DROP TABLE IF EXISTS keys
+CREATE TABLE keys (
+        FOREIGN KEY          SERIAL PRIMARY KEY,
+*/ 
+       
