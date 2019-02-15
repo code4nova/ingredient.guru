@@ -99,6 +99,6 @@ DELETE FROM authorized_foods
 /*
 DROP TABLE IF EXISTS keys
 CREATE TABLE keys (
-        foodid          SERIAL PRIMARY KEY,
+        FOREIGN KEY          SERIAL PRIMARY KEY,
 */ 
        

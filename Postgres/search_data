@@ -4,7 +4,7 @@ connection = psycopg2.connect("dbname=ingredientguru user=abuchholz")
 cur = connection.cursor()
 keyword=""
 while keyword != "quit":
-    keyword = input("\n\nInput a Keyword > ")
+    keyword = input("\n\nInput a Keyword> ")
     print("Searching for keyword",keyword)
     cur.execute("SELECT * FROM authorized_foods WHERE long_desc LIKE '%{0}%';".format(keyword))
     for row in cur.fetchall():
