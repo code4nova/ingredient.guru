@@ -68,7 +68,6 @@ COPY import.food_description
 FROM '$PWD/raw_data/new_desc.csv'	
 WITH DELIMITER ',' HEADER CSV ENCODING 'LATIN1';
 
-
 COPY import.nutrient_definition
 FROM '$PWD/raw_data/NUTR_DEF.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
@@ -79,20 +78,21 @@ WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
 /*
 SELECT
-        fd.shrt_desc,
-        fn.nutrdesc,
-        nd.nutr_val,
-        fn.units
+        fooddesc.shrt_desc,
+        nutrdef.nutrdesc,
+        nutrdata.nutr_val,
+        nutrdef.units
 FROM
-        import.nut_data AS nd
+        import.nutrient_data AS nutrdata
 
-JOIN    import.food_nutr AS fn
-ON      fn.nutr_no = nd.nutr_no
+JOIN    import.nutrient_definition AS nutrdef
+ON      nutrdef.nutr_no = nutrdata.nutr_no
 
-JOIN    import.food_desc AS fd
-ON      fd.ndb_no = nd.ndb_no
+JOIN    import.food_description AS fooddesc
+ON      fooddesc.ndb_no = nutrdata.ndb_no
 
-WHERE   fd.ndb_no = '01004'
-ORDER BY fn.sr_order ASC
+WHERE   fooddesc.ndb_no = '01004'
+ORDER BY nutrdef.sr_order ASC
 */
+
 
