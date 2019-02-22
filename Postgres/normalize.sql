@@ -1,6 +1,61 @@
 --Authorized Group Table 
-DROP TABLE IF EXISTS authorized_groups CASCADE;
 
+
+--DROP TABLE IF EXISTS authorized_groups CASCADE;
+--DROP TABLE IF EXISTS authorized_foods CASCADE;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 CREATE TABLE authorized_groups(groupid INT,groupdesc TEXT);
 
 INSERT INTO authorized_groups(groupid,groupdesc)
@@ -48,10 +103,13 @@ WHERE groupid in (0300,2100,2200,2500,3600);
 DELETE FROM authorized_foods
         WHERE long_desc ~ '[A-Z]{2,}'
         AND NOT long_desc ~ 'USDA';
-/*
-DROP TABLE IF EXISTS keys
-CREATE TABLE keys (
-        FOREIGN KEY          SERIAL PRIMARY KEY,
-*/ 
+ 
+
+SELECT * FROM authorized_groups
+JOIN authorized_foods
+ON authorized_groups.groupdesc = authorized_foods.long_desc;
+        three=two.replace(b"~",b"'")
 
 
+
+*/
