@@ -6,6 +6,6 @@
 4. quick flask application that easily searches for data. Will be in python
 
 ## To Do
-
+1. filter data
 
 
