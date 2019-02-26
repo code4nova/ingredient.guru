@@ -1,13 +1,41 @@
 --Authorized Group Table 
 
 
+
 --DROP TABLE IF EXISTS authorized_groups CASCADE;
 --DROP TABLE IF EXISTS authorized_foods CASCADE;
+CREATE SCHEMA IF NOT EXISTS nutrient;
+DROP TABLE IF EXISTS nutrient.fe CASCADE;
+
+--Iron Table
+CREATE TABLE nutrient.fe ( 
+        ndb_no          TEXT,
+        nutr_no         TEXT,
+        nutr_val        TEXT,
+        num_data_pts    TEXT,
+        std_error       TEXT,
+        src_cd          TEXT,
+        deriv_cd        TEXT,
+        ref_ndb_no      TEXT,
+        add_nutr_mark   TEXT,
+        num_studies     TEXT,
+        mini            TEXT,
+        maxa            TEXT,
+        df              TEXT,
+        low_eb          TEXT,
+        up_eb           TEXT,
+        stat_cmt        TEXT,
+        addmod_date     TEXT
+);
 
 
+INSERT INTO nutrient.fe 
+SELECT * FROM import.nutrient_data 
+WHERE nutr_no = '303';
 
 
-
+ALTER TABLE nutrient.fe
+ADD db_id SERIAL PRIMARY KEY;
 
 
 

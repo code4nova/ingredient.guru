@@ -1,5 +1,5 @@
 with open("bad_food.csv","rb") as bad_file:
-        zero=bad_file.read().replace(b",",b" WM ")
+        zero=bad_file.read().replace(b",",b"   ")
         one=zero.replace(b"^",b",")
         two=one.replace(b"'",b"")
         three=two.replace(b"~",b"'")

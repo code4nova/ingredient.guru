@@ -31,6 +31,7 @@ CREATE TABLE import.food_description (
 	cho_factor	TEXT
 );
 
+
 CREATE TABLE import.nutrient_definition (
 	nutr_no		TEXT,
 	units		TEXT,
@@ -76,6 +77,8 @@ COPY import.nutrient_data
 FROM '$PWD/raw_data/NUT_DATA.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
+ALTER TABLE import.food_description
+ADD db_id SERIAL PRIMARY KEY;
 /*
 SELECT
         fooddesc.shrt_desc,
