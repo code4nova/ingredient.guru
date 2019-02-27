@@ -41,7 +41,7 @@
  DROP TABLE IF EXISTS nutrient.VITD;
  DROP TABLE IF EXISTS nutrient.CRYPX;
  DROP TABLE IF EXISTS nutrient.LYCPN;
- DROP TABLE IF EXISTS nutrient.LUT+ZEA;
+ DROP TABLE IF EXISTS nutrient.LUTZEA;
  DROP TABLE IF EXISTS nutrient.TOCPHB;
  DROP TABLE IF EXISTS nutrient.TOCPHG;
  DROP TABLE IF EXISTS nutrient.TOCPHD;
@@ -190,7 +190,7 @@
  CREATE TABLE nutrient.VITD as select * from import.nutrient_data where nutr_no='328';
  CREATE TABLE nutrient.CRYPX as select * from import.nutrient_data where nutr_no='334';
  CREATE TABLE nutrient.LYCPN as select * from import.nutrient_data where nutr_no='337';
- CREATE TABLE nutrient.LUT+ZEA as select * from import.nutrient_data where nutr_no='338';
+ CREATE TABLE nutrient.LUTZEA as select * from import.nutrient_data where nutr_no='338';
  CREATE TABLE nutrient.TOCPHB as select * from import.nutrient_data where nutr_no='341';
  CREATE TABLE nutrient.TOCPHG as select * from import.nutrient_data where nutr_no='342';
  CREATE TABLE nutrient.TOCPHD as select * from import.nutrient_data where nutr_no='343';
@@ -339,7 +339,7 @@
  ALTER TABLE nutrient.VITD ADD db_id SERIAL PRIMARY KEY;
  ALTER TABLE nutrient.CRYPX ADD db_id SERIAL PRIMARY KEY;
  ALTER TABLE nutrient.LYCPN ADD db_id SERIAL PRIMARY KEY;
- ALTER TABLE nutrient.LUT+ZEA ADD db_id SERIAL PRIMARY KEY;
+ ALTER TABLE nutrient.LUTZEA ADD db_id SERIAL PRIMARY KEY;
  ALTER TABLE nutrient.TOCPHB ADD db_id SERIAL PRIMARY KEY;
  ALTER TABLE nutrient.TOCPHG ADD db_id SERIAL PRIMARY KEY;
  ALTER TABLE nutrient.TOCPHD ADD db_id SERIAL PRIMARY KEY;
