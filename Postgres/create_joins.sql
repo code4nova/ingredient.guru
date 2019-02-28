@@ -29,4 +29,4 @@ SELECT
         nutrient_'||nd.tagname||'.nutr_val as amount
 FROM
         import.food_description food_desc
-left JOIN nutrient.'||nd.tagname||' nutrient_'||nd.tagname||' ON to_number(nutrient_'||nd.tagname||'.ndb_no,''99999'') = to_number(food_desc.ndb_no,''99999'');' from import.nutrient_definition as nd; 
+left JOIN nutrient.'||nd.tagname||' nutrient_'||nd.tagname||' ON to_number(nutrient_'||nd.tagname||'.ndb_no,'||'''99999'''||') = to_number(food_desc.ndb_no,'||'''99999'''||');' from import.nutrient_definition as nd; 
