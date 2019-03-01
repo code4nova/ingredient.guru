@@ -15,50 +15,50 @@ CREATE TABLE import.food_groups (
 );
 
 CREATE TABLE import.food_description (
-	ndb_no		TEXT,
-	fdgrp_cd	TEXT,
-	long_desc	TEXT,
-	shrt_desc	TEXT,
-	comname		TEXT,
-	manufacname	TEXT,
-	survey		TEXT,
-	ref_desc	TEXT,
-	refuse		TEXT,
-	sciname		TEXT,
-	n_factor	TEXT,
-	pro_factor	TEXT,
-	fat_factor	TEXT,
-	cho_factor	TEXT
+	ndb_no		SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
+	fdgrp_cd	SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
+	long_desc	CHAR(200) NOT NULL,
+	shrt_desc	CHAR(60) NOT NULL,
+	comname		CHAR(100),
+	manufacname	CHAR(65),
+	survey		CHAR(1),
+	ref_desc	CHAR(135),
+	refuse		SMALLINT(2) UNSIGNED,
+	sciname		CHAR(65),
+	n_factor	NUMERIC(4,2),
+	pro_factor	NUMERIC(4,2),
+	fat_factor	NUMERIC(4,2),
+	cho_factor	NUMERIC(4,2)
 );
 
 
 CREATE TABLE import.nutrient_definition (
-	nutr_no		TEXT,
-	units		TEXT,
-	tagname		TEXT,
-	nutrdesc	TEXT,
-	num_desc	TEXT,
-	sr_order	TEXT
+	nutr_no		SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
+	units		CHAR(7) NOT NULL,
+	tagname		CHAR(20),
+	nutrdesc	CHAR(60) NOT NULL,
+	num_desc	CHAR(1) NOT NULL,
+	sr_order	SMALLINT(2) NOT NULL
 );
 
 CREATE TABLE import.nutrient_data (
-        ndb_no          TEXT,
-        nutr_no         TEXT,
-        nutr_val        TEXT,
-        num_data_pts    TEXT,
-        std_error       TEXT,
-        src_cd          TEXT,
-        deriv_cd        TEXT,
-        ref_ndb_no      TEXT,
-        add_nutr_mark   TEXT,
-        num_studies     TEXT,
-        minn            TEXT,
-        maxx            TEXT,
-        df              TEXT,
-        low_eb          TEXT,
-        up_eb           TEXT,
-        stat_cmt        TEXT,
-        addmod_date     TEXT
+        ndb_no          SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
+        nutr_no         SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
+        nutr_val        NUMERIC(10,2),
+        num_data_pts    SMALLINT(2) UNSIGNED NOT NULL,
+        std_error       NUMERIC(8,3),
+        src_cd          CHAR(2) NOT NULL,
+        deriv_cd        CHAR(4),
+        ref_ndb_no      CHAR(5),
+        add_nutr_mark   CHAR(1),
+        num_studies     SMALLINT(2)
+        minn            NUMERIC(10,3),
+        maxx            NUMERIC(10,3),
+        df              SMALLINT(2),
+        low_eb          NUMERIC(10,3),
+        up_eb           NUMERIC(10,3),
+        stat_cmt        CHAR(10),
+        addmod_date     CHAR(10)
 );
 
 COPY import.food_groups		
