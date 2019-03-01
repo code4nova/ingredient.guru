@@ -14,51 +14,50 @@ CREATE TABLE import.food_groups (
 	fdgrp_desc	TEXT
 );
 
-CREATE TABLE import.food_description (
-	ndb_no		SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
-	fdgrp_cd	SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
-	long_desc	CHAR(200) NOT NULL,
-	shrt_desc	CHAR(60) NOT NULL,
-	comname		CHAR(100),
-	manufacname	CHAR(65),
-	survey		CHAR(1),
-	ref_desc	CHAR(135),
-	refuse		SMALLINT(2) UNSIGNED,
-	sciname		CHAR(65),
-	n_factor	NUMERIC(4,2),
-	pro_factor	NUMERIC(4,2),
-	fat_factor	NUMERIC(4,2),
-	cho_factor	NUMERIC(4,2)
+CREATE TABLE food_description (
+        ndb_no          SMALLINT NULL,
+        fdgrp_cd        SMALLINT  NULL,
+        long_desc       VARCHAR (200) NOT NULL,
+        shrt_desc       VARCHAR (60) NOT NULL,
+        comname         VARCHAR (100),
+        manufacname     VARCHAR (65),
+        survey          VARCHAR (1),
+        ref_desc        VARCHAR (135),
+        refuse          SMALLINT,
+        sciname         VARCHAR (65),
+        n_factor        NUMERIC (4,2),
+        pro_factor      NUMERIC (4,2),
+        fat_factor      NUMERIC (4,2),
+        cho_factor      NUMERIC (4,2)
 );
 
-
 CREATE TABLE import.nutrient_definition (
-	nutr_no		SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
-	units		CHAR(7) NOT NULL,
-	tagname		CHAR(20),
-	nutrdesc	CHAR(60) NOT NULL,
-	num_desc	CHAR(1) NOT NULL,
-	sr_order	SMALLINT(2) NOT NULL
+        nutr_no         SMALLINT NOT NULL,
+        units           VARCHAR (7) NOT NULL,
+        tagname         VARCHAR (20),
+        nutrdesc        VARCHAR (60) NOT NULL,
+        num_desc        VARCHAR (1) NOT NULL,
+        sr_order        SMALLINT NOT NULL
 );
 
 CREATE TABLE import.nutrient_data (
-        ndb_no          SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
-        nutr_no         SMALLINT(2) UNSIGNED ZEROFILL NOT NULL,
-        nutr_val        NUMERIC(10,2),
-        num_data_pts    SMALLINT(2) UNSIGNED NOT NULL,
-        std_error       NUMERIC(8,3),
-        src_cd          CHAR(2) NOT NULL,
-        deriv_cd        CHAR(4),
-        ref_ndb_no      CHAR(5),
-        add_nutr_mark   CHAR(1),
-        num_studies     SMALLINT(2)
+        ndb_no          SMALLINT NOT NULL,
+        nutr_no         SMALLINT NOT NULL,
+        nutr_val        NUMERIC (10,2),
+        num_data_pts    SMALLINT NOT NULL,
+        std_error       NUMERIC (8,3),
+        src_cd          VARCHAR(2) NOT NULL,
+        deriv_cd        VARCHAR(4),
+        ref_ndb_no      VARCHAR(5),
+        add_nutr_mark   VARCHAR(1),
+        num_studies     SMALLINT,
         minn            NUMERIC(10,3),
         maxx            NUMERIC(10,3),
-        df              SMALLINT(2),
+        df              SMALLINT,
         low_eb          NUMERIC(10,3),
         up_eb           NUMERIC(10,3),
-        stat_cmt        CHAR(10),
-        addmod_date     CHAR(10)
+        stat_cmt        VARCHAR(10),
+        addmod_date     VARCHAR(10)
 );
 
 COPY import.food_groups		
