@@ -14,7 +14,7 @@ CREATE TABLE import.food_groups (
 	fdgrp_desc	TEXT
 );
 
-CREATE TABLE food_description (
+CREATE TABLE import.food_description (
         ndb_no          SMALLINT NULL,
         fdgrp_cd        SMALLINT  NULL,
         long_desc       VARCHAR (200) NOT NULL,
