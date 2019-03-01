@@ -15,37 +15,37 @@ CREATE TABLE import.food_groups (
 );
 
 CREATE TABLE import.food_description (
-	ndb_no		TEXT,
-	fdgrp_cd	TEXT,
-	long_desc	TEXT,
-	shrt_desc	TEXT,
+	ndb_no		INT,
+	fdgrp_cd	INT,
+	long_desc	TEXT, 
+        shrt_desc	TEXT,
 	comname		TEXT,
 	manufacname	TEXT,
 	survey		TEXT,
 	ref_desc	TEXT,
 	refuse		TEXT,
 	sciname		TEXT,
-	n_factor	TEXT,
-	pro_factor	TEXT,
-	fat_factor	TEXT,
-	cho_factor	TEXT
+	n_factor	FLOAT,
+	pro_factor	FLOAT,
+	fat_factor	FLOAT,
+	cho_factor	FLOAT
 );
 
 
 CREATE TABLE import.nutrient_definition (
-	nutr_no		TEXT,
+	nutr_no		INT,
 	units		TEXT,
 	tagname		TEXT,
 	nutrdesc	TEXT,
 	num_desc	TEXT,
-	sr_order	TEXT
+	sr_order	INT
 );
 
 CREATE TABLE import.nutrient_data (
-        ndb_no          TEXT,
-        nutr_no         TEXT,
-        nutr_val        TEXT,
-        num_data_pts    TEXT,
+        ndb_no          INT,
+        nutr_no         INT,
+        nutr_val        FLOAT,
+        num_data_pts    INT,
         std_error       TEXT,
         src_cd          TEXT,
         deriv_cd        TEXT,
@@ -77,8 +77,6 @@ COPY import.nutrient_data
 FROM '$PWD/raw_data/NUT_DATA.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
-ALTER TABLE import.food_description
-ADD db_id SERIAL PRIMARY KEY;
 /*
 SELECT
         fooddesc.shrt_desc,

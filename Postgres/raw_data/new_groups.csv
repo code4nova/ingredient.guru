@@ -1,0 +1,26 @@
+group_id   group_name
+0100   inDairy and Egg Productsin
+0200   inSpices and Herbsin
+0300   inBaby Foodsin
+0400   inFats and Oilsin
+0500   inPoultry Productsin
+0600   inSoups    Sauces    and Graviesin
+0700   inSausages and Luncheon Meatsin
+0800   inBreakfast Cerealsin
+0900   inFruits and Fruit Juicesin
+1000   inPork Productsin
+1100   inVegetables and Vegetable Productsin
+1200   inNut and Seed Productsin
+1300   inBeef Productsin
+1400   inBeveragesin
+1500   inFinfish and Shellfish Productsin
+1600   inLegumes and Legume Productsin
+1700   inLamb    Veal    and Game Productsin
+1800   inBaked Productsin
+1900   inSweetsin
+2000   inCereal Grains and Pastain
+2100   inFast Foodsin
+2200   inMeals    Entrees    and Side Dishesin
+2500   inSnacksin
+3500   inAmerican Indian/Alaska Native Foodsin
+3600   inRestaurant Foodsin

@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 import psycopg2
+import sys
 connection = psycopg2.connect("dbname=ingredientguru user=abuchholz")
 cur = connection.cursor()
+
+cur.execute("SELECT * FROM import.food_description WHERE long_desc LIKE '%{0}%';".format(sys.argv[1]))
+
+for row in cur.fetchall():
+    print(row)
+
+"""
 keyword=""
 while keyword != "quit":
     keyword = input("\n\nInput a Keyword> ")
     print("Searching for keyword",keyword)
-    cur.execute("SELECT * FROM authorized_foods WHERE long_desc LIKE '%{0}%';".format(keyword))
+    cur.execute("SELECT * FROM  WHERE long_desc LIKE '%{0}%';".format(keyword))
     for row in cur.fetchall():
         print(row)
-
+"""
 cur.close()
 connection.close()
