@@ -2,13 +2,47 @@
 import psycopg2
 import sys
 connection = psycopg2.connect("dbname=ingredientguru user=abuchholz")
+distinct = connection.cursor()
 cur = connection.cursor()
 
-cur.execute("SELECT * FROM import.food_description WHERE long_desc LIKE '%{0}%';".format(sys.argv[1]))
+# argv 2:
+#
+# 1 = food nutrients
+# 2 = distinct nutrient
+
+try:
+    print("Searching for "+sys.argv[1])
+except IndexError:
+    print("Argument 1 not found (string)")
+    quit()
+
+try:
+    if sys.argv[2] == "1":
+        with open("food_nutrient_join.sql") as joinfile:
+            cur.execute(joinfile.read().format(sys.argv[1]))
+except IndexError:
+        
+        distinct.execute("SELECT ndb_no,shrt_desc FROM import.food_description WHERE lower(shrt_desc) LIKE '%{0}%';".format(sys.argv[1].lower()))
+       
+        db_ids = []
+
+        for i,row in enumerate(distinct.fetchall()):
+            print(i,"|",row[0],row[1])
+            db_ids.append(row[0])
+
+        print(db_ids)
+       
+        db_selection = int(input("pick an id: "))
+
+        with open("food_nutrient_join.sql") as joinfile:
+            cur.execute(joinfile.read().format(db_ids[db_selection]))
+
+#cur.execute("SELECT * FROM import.food_description WHERE long_desc LIKE '%{0}%';".format(sys.argv[1]))
 
 for row in cur.fetchall():
+    #print("123")
     print(row)
-
+print("hi")
 """
 keyword=""
 while keyword != "quit":
