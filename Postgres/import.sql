@@ -25,7 +25,7 @@ CREATE TABLE import.food_description (
 	ref_desc	TEXT,
 	refuse		TEXT,
 	sciname		TEXT,
-	n_factor	FLOAT,
+	n_factor	NUMERIC,
 	pro_factor	FLOAT,
 	fat_factor	FLOAT,
 	cho_factor	FLOAT
