@@ -1,99 +1,75 @@
-CREATE SCHEMA IF NOT EXISTS import;
-
-DROP TABLE IF EXISTS import.nutrient_data;
-DROP TABLE IF EXISTS import.food_groups;
-DROP TABLE IF EXISTS import.food_description;
-DROP TABLE IF EXISTS import.nutrient_definition;
+DROP TABLE IF EXISTS ingredient;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS nutrient;
+DROP TABLE IF EXISTS ingredient_nutrient;
 
 --DROP   TABLE IF EXISTS import.food_groups;
 --DROP   TABLE IF EXISTS import.food_desc;
 --DROP   TABLE IF EXISTS import.food_nutr;
 
-CREATE TABLE import.food_groups (
+CREATE TABLE groups (
 	fdgrp_cd	TEXT,
 	fdgrp_desc	TEXT
 );
-
-CREATE TABLE import.food_description (
-	ndb_no		INT,
-	fdgrp_cd	INT,
-	long_desc	TEXT, 
-        shrt_desc	TEXT,
-	comname		TEXT,
-	manufacname	TEXT,
-	survey		TEXT,
-	ref_desc	TEXT,
-	refuse		TEXT,
-	sciname		TEXT,
-	n_factor	NUMERIC,
-	pro_factor	FLOAT,
-	fat_factor	FLOAT,
-	cho_factor	FLOAT
+CREATE TABLE ingredient (
+    id INT NULL,
+    group_id SMALLINT  NULL,
+    long_description VARCHAR (200) NOT NULL,
+    short_description VARCHAR (85) NOT NULL,
+    common_name VARCHAR (100),
+    manufacturer_name VARCHAR (65),
+    is_in_fndds_survey VARCHAR (3),
+    inedible_parts VARCHAR (135),
+    percent_being_refuse SMALLINT,
+    scientific_name VARCHAR (65),
+    nitrogen_to_protein_factor NUMERIC (4,2),
+    calories_from_protein_factor NUMERIC (4,2),
+    calories_from_fat_factor NUMERIC (4,2),
+    calories_from_carb_factor NUMERIC (4,2)
 );
 
-
-CREATE TABLE import.nutrient_definition (
-	nutr_no		INT,
-	units		TEXT,
-	tagname		TEXT,
-	nutrdesc	TEXT,
-	num_desc	TEXT,
-	sr_order	INT
+CREATE TABLE nutrient (
+    nutrient_id SMALLINT NOT NULL,
+    units_of_measurement VARCHAR (7) NOT NULL,
+    tag_name VARCHAR (20),
+    name VARCHAR (60) NOT NULL,
+    decimal_places_rounded VARCHAR (1) NOT NULL,
+    sort_order SMALLINT NOT NULL
 );
 
-CREATE TABLE import.nutrient_data (
-        ndb_no          INT,
-        nutr_no         INT,
-        nutr_val        FLOAT,
-        num_data_pts    INT,
-        std_error       TEXT,
-        src_cd          TEXT,
-        deriv_cd        TEXT,
-        ref_ndb_no      TEXT,
-        add_nutr_mark   TEXT,
-        num_studies     TEXT,
-        minn            TEXT,
-        maxx            TEXT,
-        df              TEXT,
-        low_eb          TEXT,
-        up_eb           TEXT,
-        stat_cmt        TEXT,
-        addmod_date     TEXT
+CREATE TABLE ingredient_nutrient (
+    ingredient_id INT NOT NULL,
+    nutrient_id SMALLINT NOT NULL,
+    nutrient_value NUMERIC (10,2),
+    number_of_analyses SMALLINT NOT NULL,
+    standard_error NUMERIC (8,3),
+    type_of_data VARCHAR(2) NOT NULL,
+    derivation VARCHAR(4),
+    alternative_ingredient_id VARCHAR(5),
+    has_been_fortified VARCHAR(1),
+    number_of_studies SMALLINT,
+    minimum_value NUMERIC(10,3),
+    maximum_value NUMERIC(10,3),
+    degrees_of_freedom SMALLINT,
+    lower_error_bound NUMERIC(10,3),
+    upper_error_bound NUMERIC(10,3),
+    statistical_comment VARCHAR(10),
+    last_update DATE
 );
 
-COPY import.food_groups		
+COPY groups		
 FROM '$PWD/raw_data/FD_GROUP.txt'		
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';		
 
-COPY import.food_description
+COPY ingredient
 FROM '$PWD/raw_data/new_desc.csv'	
 WITH DELIMITER ',' HEADER CSV ENCODING 'LATIN1';
 
-COPY import.nutrient_definition
+COPY nutrient
 FROM '$PWD/raw_data/NUTR_DEF.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
-COPY import.nutrient_data
+COPY ingredient_nutrient
 FROM '$PWD/raw_data/NUT_DATA.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
-
-/*
-SELECT
-        fooddesc.shrt_desc,
-        nutrdef.nutrdesc,
-        nutrdata.nutr_val,
-        nutrdef.units
-FROM
-        import.nutrient_data AS nutrdata
-
-JOIN    import.nutrient_definition AS nutrdef
-ON      nutrdef.nutr_no = nutrdata.nutr_no
-
-JOIN    import.food_description AS fooddesc
-ON      fooddesc.ndb_no = nutrdata.ndb_no
-
-WHERE   fooddesc.ndb_no = '01004'
-ORDER BY nutrdef.sr_order ASC
-*/
-
 

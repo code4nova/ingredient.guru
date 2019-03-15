@@ -5,11 +5,6 @@ connection = psycopg2.connect("dbname=ingredientguru user=abuchholz")
 distinct = connection.cursor()
 cur = connection.cursor()
 
-# argv 2:
-#
-# 1 = food nutrients
-# 2 = distinct nutrient
-
 try:
     print("Searching for "+sys.argv[1])
 except IndexError:
@@ -18,11 +13,23 @@ except IndexError:
 
 try:
     if sys.argv[2] == "1":
-        with open("food_nutrient_join.sql") as joinfile:
-            cur.execute(joinfile.read().format(sys.argv[1]))
+        #with open("food_nutrient_join.sql") as joinfile:
+        #cur.execute(joinfile.read().format(sys.argv[1]))
+        cur.execute("""
+SELECT                                                                                                                                                       
+        food_desc.short_description,                                                                                                                                 
+        nut_def.tag_name,                                                                                                                                    
+        nut_dat.nutrient_value,                                                                                                                                    
+        nut_def.units_of_measurement                                                                                                                                        
+FROM ingredient food_desc                                                                                                                       
+LEFT JOIN ingredient_nutrient nut_dat ON food_desc.id = nut_dat.ingredient_id                                                                                  
+LEFT JOIN nutrient nut_def ON nut_dat.nutrient_id = nut_def.nutrient_id                                                                         
+WHERE food_desc.id = {0}; 
+""".format(sys.argv[1]))
+        print("yeet")
 except IndexError:
         
-        distinct.execute("SELECT ndb_no,shrt_desc FROM import.food_description WHERE lower(shrt_desc) LIKE '%{0}%';".format(sys.argv[1].lower()))
+        distinct.execute("SELECT id,short_description FROM ingredient WHERE lower(short_description) LIKE '%{0}%';".format(sys.argv[1].lower()))
        
         db_ids = []
 
@@ -39,16 +46,17 @@ except IndexError:
 
 #cur.execute("SELECT * FROM import.food_description WHERE long_desc LIKE '%{0}%';".format(sys.argv[1]))
 
-for row in cur.fetchall():
-    #print("123")
-    print(row)
-print("hi")
+foo = cur.fetchall()
+
+print(foo[0][0])
+for row in foo:
+    print(row[1],"|",row[2],"|",row[3])
 """
 keyword=""
 while keyword != "quit":
     keyword = input("\n\nInput a Keyword> ")
     print("Searching for keyword",keyword)
-    cur.execute("SELECT * FROM  WHERE long_desc LIKE '%{0}%';".format(keyword))
+    cur.execute("SELECT * FROM  WHERE long_description LIKE '%{0}%';".format(keyword))
     for row in cur.fetchall():
         print(row)
 """
