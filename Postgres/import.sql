@@ -32,29 +32,29 @@ CREATE TABLE nutrient (
     nutrient_id                      SMALLINT NOT NULL,
     units_of_measurement             VARCHAR (7) NOT NULL,
     tag_name                         VARCHAR (20),
-    name VARCHAR (60) NOT NULL,
-    decimal_places_rounded VARCHAR (1) NOT NULL,
-    sort_order SMALLINT NOT NULL
+    name                             VARCHAR (60) NOT NULL,
+    decimal_places_rounded           VARCHAR (1) NOT NULL,
+    sort_order                       SMALLINT NOT NULL
 );
 
 CREATE TABLE ingredient_nutrient (
-    ingredient_id INT NOT NULL,
-    nutrient_id SMALLINT NOT NULL,
-    nutrient_value NUMERIC (10,2),
-    number_of_analyses SMALLINT NOT NULL,
-    standard_error NUMERIC (8,3),
-    type_of_data VARCHAR(2) NOT NULL,
-    derivation VARCHAR(4),
-    alternative_ingredient_id VARCHAR(5),
-    has_been_fortified VARCHAR(1),
-    number_of_studies SMALLINT,
-    minimum_value NUMERIC(10,3),
-    maximum_value NUMERIC(10,3),
-    degrees_of_freedom SMALLINT,
-    lower_error_bound NUMERIC(10,3),
-    upper_error_bound NUMERIC(10,3),
-    statistical_comment VARCHAR(10),
-    last_update DATE
+    ingredient_id                    INT NOT NULL,
+    nutrient_id                      SMALLINT NOT NULL,
+    nutrient_value                   NUMERIC (10,2),
+    number_of_analyses               SMALLINT NOT NULL,
+    standard_error                   NUMERIC (8,3),
+    type_of_data                     VARCHAR(2) NOT NULL,
+    derivation                       VARCHAR(4),
+    alternative_ingredient_id        VARCHAR(5),
+    has_been_fortified               VARCHAR(1),
+    number_of_studies                SMALLINT,
+    minimum_value                    NUMERIC(10,3),
+    maximum_value                    NUMERIC(10,3),
+    degrees_of_freedom               SMALLINT,
+    lower_error_bound                NUMERIC(10,3),
+    upper_error_bound                NUMERIC(10,3),
+    statistical_comment              VARCHAR(10),
+    last_update                      DATE
 );
 
 COPY groups		
