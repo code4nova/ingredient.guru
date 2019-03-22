@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS nutrient;
 DROP TABLE IF EXISTS ingredient_nutrient;
-
+CREATE EXTENSION pg_trgm;
 --DROP   TABLE IF EXISTS import.food_groups;
 --DROP   TABLE IF EXISTS import.food_desc;
 --DROP   TABLE IF EXISTS import.food_nutr;
@@ -12,26 +12,26 @@ CREATE TABLE groups (
 	fdgrp_desc	TEXT
 );
 CREATE TABLE ingredient (
-    id INT NULL,
-    group_id SMALLINT  NULL,
-    long_description VARCHAR (200) NOT NULL,
-    short_description VARCHAR (85) NOT NULL,
-    common_name VARCHAR (100),
-    manufacturer_name VARCHAR (65),
-    is_in_fndds_survey VARCHAR (3),
-    inedible_parts VARCHAR (135),
-    percent_being_refuse SMALLINT,
-    scientific_name VARCHAR (65),
-    nitrogen_to_protein_factor NUMERIC (4,2),
-    calories_from_protein_factor NUMERIC (4,2),
-    calories_from_fat_factor NUMERIC (4,2),
-    calories_from_carb_factor NUMERIC (4,2)
+    id                                INT NULL,
+    group_id                          SMALLINT NULL,
+    long_description                  VARCHAR (200) NOT NULL,
+    short_description                 VARCHAR (85) NOT NULL,
+    common_name                       VARCHAR (100),
+    manufacturer_name                 VARCHAR (65),
+    is_in_fndds_survey                VARCHAR (3),
+    inedible_parts                    VARCHAR (135),
+    percent_being_refuse              SMALLINT,
+    scientific_name                   VARCHAR (65),
+    nitrogen_to_protein_factor        NUMERIC (4,2),
+    calories_from_protein_factor      NUMERIC (4,2),
+    calories_from_fat_factor          NUMERIC (4,2),
+    calories_from_carb_factor         NUMERIC (4,2)
 );
 
 CREATE TABLE nutrient (
-    nutrient_id SMALLINT NOT NULL,
-    units_of_measurement VARCHAR (7) NOT NULL,
-    tag_name VARCHAR (20),
+    nutrient_id                      SMALLINT NOT NULL,
+    units_of_measurement             VARCHAR (7) NOT NULL,
+    tag_name                         VARCHAR (20),
     name VARCHAR (60) NOT NULL,
     decimal_places_rounded VARCHAR (1) NOT NULL,
     sort_order SMALLINT NOT NULL
@@ -73,3 +73,5 @@ COPY ingredient_nutrient
 FROM '$PWD/raw_data/NUT_DATA.txt'
 WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
+CREATE INDEX first_index ON ingredient_nutrient(ingredient_id);
+CREATE INDEX second_index ON ingredient USING gin (long_description gin_trgm_ops);
