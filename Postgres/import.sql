@@ -75,3 +75,4 @@ WITH DELIMITER '^' QUOTE '~' HEADER CSV ENCODING 'LATIN1';
 
 CREATE INDEX first_index ON ingredient_nutrient(ingredient_id);
 CREATE INDEX second_index ON ingredient USING gin (long_description gin_trgm_ops);
+CREATE INDEX third_index ON 
