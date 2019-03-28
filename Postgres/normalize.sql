@@ -1,3 +1,10 @@
+DELETE FROM ingredient
+WHERE group_id in (0300,2100,2200,2500,3600);
+
+--Delete Brand Names
+DELETE FROM ingredient
+        WHERE long_description ~ '[A-Z]{2,}'
+        AND NOT long_description ~ 'USDA';
 
 
 
