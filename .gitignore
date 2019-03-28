@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+Postgres/raw_data/.mypy_cache/
 
 # C extensions
 *.so
@@ -99,6 +100,3 @@ venv.bak/
 
 # mkdocs documentation
 /site
-
-# mypy
-.mypy_cache/
