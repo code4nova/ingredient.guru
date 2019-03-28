@@ -1,9 +1,12 @@
+# make stuff
+build.sql
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 Postgres/raw_data/.mypy_cache/
-
+inary/
 # C extensions
 *.so
 
