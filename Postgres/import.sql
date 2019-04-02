@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS nutrient;
 DROP TABLE IF EXISTS ingredient_nutrient;
+DROP TABLE IF EXISTS users;
 --CREATE EXTENSION pg_trgm;
 --DROP   TABLE IF EXISTS import.food_groups;
 --DROP   TABLE IF EXISTS import.food_desc;
@@ -55,6 +56,14 @@ CREATE TABLE ingredient_nutrient (
     upper_error_bound                NUMERIC(10,3),
     statistical_comment              VARCHAR(10),
     last_update                      DATE
+);
+
+CREATE TABLE users (
+        first_name                   TEXT,
+        last_name                    TEXT,
+        username                     TEXT,
+        password                     TEXT,  --Store as MD5
+        email                        TEXT
 );
 
 COPY groups		
