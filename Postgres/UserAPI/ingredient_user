@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 import psycopg2
 
+def connect(user,dbname="ingredientguru"):
+    return psycopg2.connect(f"dbname={dbname} user={user}")
 
+def askforcreds():
+    first_name = input("Enter Thou First Name")
+    last_name = input("Enter Thou Last Name")
+    username = input("Enter Thou Unique Name")
+    email = input("Enter Thou Email")
+    password = input("Enter Thou Password, its a secret")
+    return [first_name, last_name, username, email, password]
 
+def createuser(connection,credentials):
+    c = connection.cursor()
+
+    c.execute(f"INSERT INTO users VALUES('{credentials[0]}','{credentials[1]}','{credentials[2]}','{credentials[3]}','{credentials[4]}');")
+    c.commit()
+    return "yote"
+if __name__ == "__main__":
+    c = connect("abuchholz")
+    creds = askforcreds()
+    createuser(c,creds)
+    
