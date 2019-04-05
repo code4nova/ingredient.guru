@@ -9,8 +9,17 @@ class User:
     def __init__(self):
         self.authentication = None
 
-    def login(self):
-
+    def login(self,username,pass_string,connection):
+        c = connection.cursor()
+        c.execute("SELECT * FROM users WHERE username = '{0}';".format(username))
+        user_data = c.fetchall()
+        if user_data == []:
+            return False
+        if user_data[0][3] == hashlib.sha224(pass_string.encode('utf-8')).hexdigest():
+            self.authentication = user_data[0][3]
+            return True
+        else:
+            return False
 
 
 def connect(user,dbname="ingredientguru"):
@@ -39,12 +48,8 @@ def createuser(connection,credentials):
             '{credentials[4]}');""")
 
     connection.commit()
-<<<<<<< HEAD
     return "yote" # make applicable to doctest?
 
-=======
-    return "yote"
->>>>>>> d899df4c76b25463ea3d2f7d3d36329c2595d990
 
 if __name__ == "__main__":
     c = connect("fcrisafulli")
