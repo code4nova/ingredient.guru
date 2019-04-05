@@ -62,8 +62,8 @@ CREATE TABLE users (
         first_name                   TEXT,
         last_name                    TEXT,
         username                     TEXT,
-        password                     TEXT,  --Store as MD5
-        email                        TEXT
+        email                        TEXT, 
+        password                     TEXT
 );
 
 COPY groups		

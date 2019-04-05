@@ -39,8 +39,12 @@ def createuser(connection,credentials):
             '{credentials[4]}');""")
 
     connection.commit()
+<<<<<<< HEAD
     return "yote" # make applicable to doctest?
 
+=======
+    return "yote"
+>>>>>>> d899df4c76b25463ea3d2f7d3d36329c2595d990
 
 if __name__ == "__main__":
     c = connect("fcrisafulli")
