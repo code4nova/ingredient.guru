@@ -27,14 +27,20 @@ def connect(user,dbname="ingredientguru"):
 
 
 def askforcreds():
-    first_name = input("Enter Thou First Name")
-    last_name = input("Enter Thou Last Name")
-    username = input("Enter Thou Unique Name")
-    email = input("Enter Thou Email")
-    password = input("Enter Thou Password, its a secret")
-    password = hashlib.sha224(password.encode('utf-8')).hexdigest()
+      fn = input('[first name] ')
+      ln = input('[last name] ')
+      un = input('[username] ')
+      en = input('[email]')
+      pn = ''
+      while True:
+          pn = input('[password]')
+          if input('confirm password  ') == pn:
+              break
+          else:
+              print("passwords do not mccctch")
+      pn = hashlib.sha224(password.encode('utf-8')).hexdigest()
 
-    return [first_name, last_name, username, password, email]
+      return [fn, ln, un, pn, en]
 
 
 def createuser(connection,credentials):
