@@ -56,6 +56,12 @@ def createuser(connection,credentials):
     return "yote" # make applicable to doctest?
 
 
+def remove_user(connection,user_struct):
+    c = connection.cursor()
+    c.execute(f"DELETE FROM patrons WHERE username = '{user_struct.username}';")
+    connection.commit()
+
+
 if __name__ == "__main__":
     c = connect("fcrisafulli")
     creds = askforcreds()
