@@ -38,7 +38,7 @@ def askforcreds():
               break
           else:
               print("passwords do not mccctch")
-      pn = hashlib.sha224(password.encode('utf-8')).hexdigest()
+      pn = hashlib.sha224(pn.encode('utf-8')).hexdigest()
 
       return [fn, ln, un, pn, en]
 

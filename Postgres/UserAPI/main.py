@@ -17,22 +17,12 @@ print("""
 user_input = input("   >")
 
 if user_input == '1':
-    fn = input('[first name] ')
-    ln = input('[last name] ')
-    un = input('[username] ')
-    en = input('[email]')
-    pn = ''
-    while True:
-        pn = input('[password]')
-        if input('confirm password  ') == pn:
-            break
-        else:
-            print("passwords do not mccctch")
-    iu.createuser(c,[fn,ln,un,pn,en])#pn and en are flipped because the database is designed that way
+    
+    iu.createuser(c,iu.askforcreds())#pn and en are flipped because the database is designed that way
     print("END")
 
 elif user_input == '2':
-    pass
+    pass 
 elif user_input == '3':
     un = input('[username]')
     pn = input('[password]')
