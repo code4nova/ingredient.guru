@@ -39,15 +39,14 @@ def askforcreds():
 
 def createuser(connection,credentials):
     c = connection.cursor()
-
     c.execute(f"""INSERT INTO users VALUES
             ('{credentials[0]}',
             '{credentials[1]}',
             '{credentials[2]}',
             '{credentials[3]}',
             '{credentials[4]}');""")
-
     connection.commit()
+
     return "yote" # make applicable to doctest?
 
 
