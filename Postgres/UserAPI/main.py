@@ -31,9 +31,14 @@ elif user_input == '2':
         print("Not a Valid Username")
     
 elif user_input == '3':
-    iu.login(c,un,pn)
+    u = iu.User()
     un = input('[username]')
     pn = input('[password]')
+    if u.login(un,pn,c) is True:
+        print("aeiou")
+    else:
+        print("L")
+
 
 else:
     print('please choose a number from above')
