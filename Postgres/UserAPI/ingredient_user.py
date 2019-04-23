@@ -8,6 +8,7 @@ import hashlib
 class User:
     def __init__(self):
         self.authentication = None
+        self.username = None
 
     def login(self,username,pass_string,connection):
         c = connection.cursor()
@@ -17,6 +18,7 @@ class User:
             return False
         if user_data[0][3] == hashlib.sha224(pass_string.encode('utf-8')).hexdigest():
             self.authentication = user_data[0][3]
+            self.username = username
             return True
         else:
             return False
@@ -38,7 +40,7 @@ def askforcreds():
               break
           else:
               print("passwords do not match")
-      pn = hashlib.sha224(pn.encode('utf-8')).hexdigest()
+     pn = hashlib.sha224(pn.encode('utf-8')).hexdigest()
 
       return [fn, ln, un, pn, en]
 

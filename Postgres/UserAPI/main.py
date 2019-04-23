@@ -22,9 +22,18 @@ if user_input == '1':
     print("END")
 
 elif user_input == '2':
-    pass 
-elif user_input == '3':
+    u = iu.User()
     un = input('[username]')
     pn = input('[password]')
+    if u.login(un,pn,c ) == True:
+       iu.removeuser(c,un)
+    else:
+        print("Not a Valid Username")
+    
+elif user_input == '3':
+    iu.login(c,un,pn)
+    un = input('[username]')
+    pn = input('[password]')
+
 else:
     print('please choose a number from above')
