@@ -37,7 +37,7 @@ def askforcreds():
           if input('confirm password  ') == pn:
               break
           else:
-              print("passwords do not mccctch")
+              print("passwords do not match")
       pn = hashlib.sha224(pn.encode('utf-8')).hexdigest()
 
       return [fn, ln, un, pn, en]
