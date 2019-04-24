@@ -3,7 +3,16 @@ DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS nutrient;
 DROP TABLE IF EXISTS ingredient_nutrient;
 DROP TABLE IF EXISTS users;
---CREATE EXTENSION pg_trgm;
+
+
+
+
+
+
+
+
+					CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 --DROP   TABLE IF EXISTS import.food_groups;
 --DROP   TABLE IF EXISTS import.food_desc;
 --DROP   TABLE IF EXISTS import.food_nutr;
