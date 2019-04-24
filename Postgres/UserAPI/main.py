@@ -5,16 +5,40 @@ USERNAME='fcrisafulli'
 c = iu.connect(USERNAME)
 
 
+def modify(user):
+    print(""" 
+Choose an action
+----
+[1] Change password
+[2] Change email
+----
+        """)
+    user_input = input("   >")
+    if user_input == '1':
+        user_input = input("[Old Password] ")
+        if user_input == user.password:
+            user_input = input("[New password] ")
+            ###  write alter here
+
+        else:
+            print("password does not match")
+    elif user_input == '2':
+        user_input = input("[New Email] ")
+        ## alter
+
+
 print(""" 
-    Choose an option
-    -----
-    [1] Create Account
-    [2] Delete Account
-    [3] Sign In
-    -----
-    """)
+Choose an option
+-----
+[1] Create Account
+[2] Delete Account
+[3] Sign In
+-----
+""")
+
 
 user_input = input("   >")
+
 
 if user_input == '1':
     
@@ -35,7 +59,7 @@ elif user_input == '3':
     un = input('[username]')
     pn = input('[password]')
     if u.login(un,pn,c) is True:
-        print("aeiou")
+        modification(u)
     else:
         print("L")
 

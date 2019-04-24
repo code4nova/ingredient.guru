@@ -8,6 +8,7 @@ import hashlib
 class User:
     def __init__(self):
         self.authentication = None
+        self.password = None
         self.username = None
 
     def login(self,username,pass_string,connection):
@@ -19,6 +20,7 @@ class User:
         if user_data[0][3] == hashlib.sha224(pass_string.encode('utf-8')).hexdigest():
             self.authentication = user_data[0][3]
             self.username = username
+            self.password = pass_string
             return True
         else:
             return False
