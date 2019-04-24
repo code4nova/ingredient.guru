@@ -44,7 +44,7 @@ def askforcreds():
               print("passwords do not match")
       pn = hashlib.sha224(pn.encode('utf-8')).hexdigest()
 
-      return [fn, ln, un, pn, en]
+      return [fn, ln, un, en, pn]
 
 
 def createuser(connection,credentials):
@@ -65,6 +65,15 @@ def removeuser(connection,username):
     c.execute(f"DELETE FROM users WHERE username = '{username}';")
     connection.commit()
 
+def changepassword(connection,username,newpassword):
+    c = connection.cursor()
+    c.execute(f"UPDATE users SET password = '{newpassword}' WHERE username = '{username}';")
+    connection.commit()
+
+def changeemail(connection,username,newemail):
+    c = connection.cursor() 
+    c.execute(f"UPDATE users SET email = '{newemail}' WHERE username = '{username}';")
+    connection.commit()
 
 if __name__ == "__main__":
     c = connect("fcrisafulli")

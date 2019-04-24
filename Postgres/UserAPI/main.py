@@ -18,13 +18,13 @@ Choose an action
         user_input = input("[Old Password] ")
         if user_input == user.password:
             user_input = input("[New password] ")
-            ###  write alter here
+            ui.changepassword(c,user.username,user_input)
 
         else:
             print("password does not match")
     elif user_input == '2':
         user_input = input("[New Email] ")
-        ## alter
+        ui.changeemail(c,user.username,user_input)
 
 
 print(""" 
