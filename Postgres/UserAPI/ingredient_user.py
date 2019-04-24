@@ -16,9 +16,12 @@ class User:
         c.execute("SELECT * FROM users WHERE username = '{0}';".format(username))
         user_data = c.fetchall()
         if user_data == []:
+            print("userdataded")
             return False
-        if user_data[0][3] == hashlib.sha224(pass_string.encode('utf-8')).hexdigest():
-            self.authentication = user_data[0][3]
+        print(user_data[0][4])
+        print(hashlib.sha224(pass_string.encode('utf-8')).hexdigest())
+        if user_data[0][4] == hashlib.sha224(pass_string.encode('utf-8')).hexdigest():
+            self.authentication = user_data[0][4]
             self.username = username
             self.password = pass_string
             return True

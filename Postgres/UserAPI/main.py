@@ -1,5 +1,5 @@
 import ingredient_user as iu
-
+import hashlib
 
 USERNAME='fcrisafulli'
 c = iu.connect(USERNAME)
@@ -18,13 +18,14 @@ Choose an action
         user_input = input("[Old Password] ")
         if user_input == user.password:
             user_input = input("[New password] ")
-            ui.changepassword(c,user.username,user_input)
+            user_input = hashlib.sha224(user_input.encode('utf-8')).hexdigest()
+            iu.changepassword(c,user.username,user_input)
 
         else:
             print("password does not match")
     elif user_input == '2':
         user_input = input("[New Email] ")
-        ui.changeemail(c,user.username,user_input)
+        iu.changeemail(c,user.username,user_input)
 
 
 print(""" 
@@ -59,7 +60,7 @@ elif user_input == '3':
     un = input('[username]')
     pn = input('[password]')
     if u.login(un,pn,c) is True:
-        modification(u)
+        modify(u)
     else:
         print("L")
 
