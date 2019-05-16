@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 DELETE FROM ingredient
 WHERE group_id in (0300,2100,2200,2500,3600);
 
@@ -167,4 +165,3 @@ CREATE TABLE ingredient_nutrients (
     statistical_comment VARCHAR(10),
     last_update DATE
 );*/
->>>>>>> 6d39d4910c80a0aaf10e7463f06a799f723d5e19
