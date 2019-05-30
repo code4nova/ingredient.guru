@@ -1,0 +1,15 @@
+---
+links:  []
+entrypoint: service.p6
+id: ingredient.guru
+env:  []
+endpoints: 
+  - 
+    name: HTTPS
+    port-env: INGREDIENT_GURU_PORT
+    host-env: INGREDIENT_GURU_HOST
+    id: https
+    protocol: https
+cro: 1
+name: ingredient.guru
+...

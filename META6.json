@@ -1,0 +1,36 @@
+{
+  "name": "ingredient.guru",
+  "perl": "6.*",
+  "build-depends": [
+    
+  ],
+  "authors": [
+    ""
+  ],
+  "auth": "Write me!",
+  "provides": {
+    "Routes.pm6": "lib/Routes.pm6"
+  },
+  "license": "Write me!",
+  "depends": [
+    "Cro::HTTP"
+  ],
+  "source-url": "Write me!",
+  "test-depends": [
+    
+  ],
+  "resources": [
+    "fake-tls/ca-crt.pem",
+    "fake-tls/server-crt.pem",
+    "fake-tls/server-key.pem"
+  ],
+  "meta-version": "0",
+  "tags": [
+    ""
+  ],
+  "description": "Write me!",
+  "support": {
+    "source": "Write me!"
+  },
+  "version": "0.0.1"
+}
