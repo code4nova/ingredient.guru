@@ -1,24 +1,28 @@
-use Cro::HTTP::Log::File;
 use Cro::HTTP::Server;
-use Routes;
+use Cro::HTTP::Router;
 
-my Cro::Service $http = Cro::HTTP::Server.new(
-    http => <1.1>,
-    host => %*ENV<INGREDIENT_GURU_HOST> ||
-        die("Missing INGREDIENT_GURU_HOST in environment"),
-    port => %*ENV<INGREDIENT_GURU_PORT> ||
-        die("Missing INGREDIENT_GURU_PORT in environment"),
-    application => routes(),
-    after => [
-        Cro::HTTP::Log::File.new(logs => $*OUT, errors => $*ERR)
-    ]
-);
-$http.start;
-say "Listening at http://%*ENV<INGREDIENT_GURU_HOST>:%*ENV<INGREDIENT_GURU_PORT>";
-react {
-    whenever signal(SIGINT) {
-        say "Shutting down...";
-        $http.stop;
-        done;
+my $application = route {
+    get -> {
+        content 'text/html', 'Home';
     }
+    post -> 'poster' {
+        content 'text/html', 'Post request to /poster page';
+    }
+    get -> 'articles', $author, $name {
+        content 'text/html', "<h1>{$name}<h1><em>By {$author}</em>";
+    }
+}
+
+# Create the HTTP service object
+my Cro::Service $service = Cro::HTTP::Server.new(
+    :host('localhost'), :port(2314), :$application
+);
+
+# Run it
+$service.start;
+
+# Cleanly shut down on Ctrl-C
+react whenever signal(SIGINT) {
+    $service.stop;
+    exit;
 }
