@@ -1,34 +1,35 @@
 {
-  "meta-version": "0",
-  "source-url": "Write me!",
-  "build-depends": [
-    
-  ],
-  "license": "Write me!",
-  "resources": [
-    
-  ],
-  "perl": "6.*",
-  "version": "0.0.1",
-  "auth": "Write me!",
-  "support": {
-    "source": "Write me!"
-  },
   "provides": {
     "Routes.pm6": "lib/Routes.pm6"
   },
+  "perl": "6.*",
+  "name": "ingredient.guru",
   "authors": [
     ""
   ],
   "test-depends": [
     
   ],
+  "auth": "Write me!",
+  "source-url": "Write me!",
+  "description": "Write me!",
+  "license": "Write me!",
+  "version": "0.0.1",
+  "resources": [
+    
+  ],
+  "meta-version": "0",
   "depends": [
-    "Cro::HTTP"
+    "Cro::HTTP",
+    "Cro::WebSocket"
   ],
   "tags": [
     ""
   ],
-  "name": "ingredient.guru",
-  "description": "Write me!"
+  "build-depends": [
+    
+  ],
+  "support": {
+    "source": "Write me!"
+  }
 }

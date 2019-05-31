@@ -1,4 +1,4 @@
-FROM croservices/cro-http:0.8.0
+FROM croservices/cro-http-websocket:0.8.0
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
