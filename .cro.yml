@@ -1,15 +1,15 @@
 ---
-links:  []
 cro: 1
+name: ingredient.guru
+entrypoint: service.p6
+id: ingredient.guru
 endpoints: 
   - 
-    port-env: INGREDIENT_GURU_PORT
-    protocol: http
     name: HTTP
+    port-env: INGREDIENT_GURU_PORT
     id: http
     host-env: INGREDIENT_GURU_HOST
-entrypoint: service.p6
+    protocol: http
+links:  []
 env:  []
-id: ingredient.guru
-name: ingredient.guru
 ...
