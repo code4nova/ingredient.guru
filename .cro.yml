@@ -11,5 +11,15 @@ endpoints:
     host-env: INGREDIENT_GURU_HOST
     protocol: http
 links:  []
-env:  []
+env:
+  - name: DB_NAME
+    value: postgres
+  - name: DB_HOST
+    value: localhost
+  - name: DB_PORT
+    value: '7042'
+  - name: DB_USER
+    value: postgres
+  - name: DB_PASSWORD
+    value: example
 ...
