@@ -29,6 +29,7 @@ sub routes() is export {
             ) {
 
                 # you wouldn't normally do this here, but...
+                # see .cro.yml for connection creds; yours will be diff
                 my $conninfo = join " ",
                     ( 'dbname=' ~ ( %*ENV<DB_NAME> || die( "missing DB_NAME in environment" ) ) ),
                     ( "host=$_" with %*ENV<DB_HOST> ),
@@ -50,8 +51,8 @@ sub routes() is export {
                 );
 
                 # now let's just get everything we've got and spit it out
-                my %output = $db.query('select user_id,username,email from account').hashes;
-                created 'account', 'application/json', to-json %output;
+                my @output = $db.query('select user_id,username,email from account').hashes;
+                created 'account', 'application/json', to-json @output;
 
             }
 
