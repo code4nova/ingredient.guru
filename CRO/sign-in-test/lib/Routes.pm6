@@ -12,8 +12,13 @@ sub routes() is export {
             static 'static/login.html';
         }
         post -> 'login', 'auth'{
-            request-body -> (:$uname, :$passwd){
-            my %inputdict = username => $uname, password => $passwd;
+            request-body -> (:$uname, :$passwd) {
+            my %inputdict;
+            %inputdict<usha> = sha256-hex $uname;
+            %inputdict<psha> = sha256-hex $passwd;
+            %inputdict<password> = $passwd;
+            %inputdict<username> = $uname;
+            #my %inputdict = username => $uname, password => $passwd, usha => sha256-hex $uname#, ass => $passwd;#, psha => sha256-hex $passwd;
             my $body = 'static/login-post.html'.IO.slurp;
             content 'text/html', interpretBasic $body, %inputdict;
             }
@@ -23,18 +28,9 @@ sub routes() is export {
                 content 'text/html', "Guess what? you came through the POST method, "~$namevar~"!";
             }
         }
-        get -> 'module-test', :$prefix, :$fname, :$lname, :$age {
-            my %inputdict = (prefix => $prefix, 
-                fname => sha256-hex $fname, 
-                lname => $lname, 
-                age => $age,
-                fh => $fname,
-                lh => sha256-hex($lname)
-            );
-            say %inputdict<fh>;
-            my $body = 'static/mt.html'.IO.slurp;
-            content 'text/html', interpretBasic $body, %inputdict;
-        
+        get -> 'sha', :$a {
+            with $a {content 'text/html', sha256-hex "$a"}
+            else {content 'text/html', ":/"}
         }
     }
 }
