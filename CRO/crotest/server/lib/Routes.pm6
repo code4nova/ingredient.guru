@@ -1,5 +1,5 @@
 use Cro::HTTP::Router;
-use Digest::SHA;
+use Digest::SHA256::Native;
 use DBIish;
 
 ### Attributes to pass to DBI->connect() to disable automatic 
@@ -41,7 +41,7 @@ sub routes() is export {
         }
         
         #Retrieve Info From register.html   
-        post -> 'posts' {
+        post -> 'register' {
             request-body -> (:$username,:$email,:$password) {
                 
                 #SQL Insert Statment
@@ -51,7 +51,7 @@ sub routes() is export {
                     STATEMENT
                 
                 #Hash Password
-                my $hashpassword = sha256-hex $password.encode: 'utf8-c8';
+                my $hashpassword = sha256 $password.encode: 'utf8-c8';
 
                 #Retrieves Date and Time
                 my $date = Str(DateTime.now);
@@ -71,6 +71,26 @@ sub routes() is export {
                 #No Problems | Account Created
                 if $count == 1 {
                     content 'text/html','SUCCESS';
+                }
+            }
+        }
+        post -> 'login' {
+            #Retrieving Login Variables
+            request-body -> (:$userlog,:$passlog) {
+            
+                #Hash Password At Login
+                my $hashlogin = sha256 $passlog.encode: 'utf8-c8';
+
+                #SQL searches for USERNAME
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    select username from accounts WHERE username = (?)
+                    STATEMENT
+
+                #Checks for Username Inputted by User
+                my $catch = $sth.execute($userlog);
+                
+                if $catch = $userlog {
+                    content 'text/html','LOGIN SUCCESSFUL';
                 }
             }
         }
