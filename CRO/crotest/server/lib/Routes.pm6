@@ -1,4 +1,5 @@
 use Cro::HTTP::Router;
+use Digest::SHA;
 use DBIish;
 
 ### Attributes to pass to DBI->connect() to disable automatic 
@@ -48,12 +49,15 @@ sub routes() is export {
                     INSERT INTO accounts (username, email, password, date)
                     VALUES ( ?, ?, ?, ? )
                     STATEMENT
+                
+                #Hash Password
+                my $hashpassword = sha256-hex $password.encode: 'utf8-c8';
 
                 #Retrieves Date and Time
                 my $date = Str(DateTime.now);
 
                 #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
-                my $count = $sth.execute($username, $email, $password, $date);
+                my $count = $sth.execute($username, $email, $hashpassword, $date);
 
                 #Errors (i.e. Username Already Exists)
                 CATCH {
