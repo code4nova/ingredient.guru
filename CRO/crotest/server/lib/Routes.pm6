@@ -16,13 +16,9 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
     email       TEXT,
-    password    TEXT
+    password    TEXT,
+    date        TEXT
     )
-    STATEMENT
-
-$sth = $dbh.do(q:to/STATEMENT/);
-    INSERT INTO accounts (ID, username, email, password)
-    VALUES ( "1", "test", "test@gmail.com", "test" )
     STATEMENT
 
 #$dbh.dispose;
@@ -32,30 +28,31 @@ sub routes() is export {
     route {
         get -> {
             static 'static/index.html'
-        }
+        }   
         get -> 'static', *@path {
             static 'static', @path;
-        }
+        }   
         post -> 'posts' {
             request-body -> (:$username,:$email,:$password) {
-                #content 'text/html',$username ~$email~ $password;
                 $sth = $dbh.prepare(q:to/STATEMENT/);
-	                INSERT INTO accounts (username, email, password)
-	                VALUES ( ?, ?, ? )
+                    INSERT INTO accounts (username, email, password, date)
+                    VALUES ( ?, ?, ?, ? )
                     STATEMENT
-                my $count = $sth.execute( $username, $email, $password);
+
+                    my $date = Str.DateTime.now;
+                    my $count = $sth.execute($username, $email, $password, $date);
+
                 #IF USERNAME EXISTS
                 CATCH {
                     default { content 'text/html','USERNAME ALREADY EXITS'; }
                     return;
-                }
+                    }
 
-                if $count == 1 {
-                    content 'text/html','SUCCESS';
-                }
-            } 
+                    if $count == 1 {
+                        content 'text/html','SUCCESS';
+                        }
+            }
         }
     }
 }
-
 
