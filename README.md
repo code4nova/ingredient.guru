@@ -13,6 +13,8 @@ Is a module for perl6 that substitutes variables in text files for variables in 
 
 > use HTML-P6::Basic;
 
+> my %dict = name => "Jeff";
+
 > interpretBasic "Hi there {{name}}", %dict;
 
 Will return text where {{name}} will be replaced with the corresponding key-value from %dict.
