@@ -34,23 +34,27 @@ sub routes() is export {
         }   
         post -> 'posts' {
             request-body -> (:$username,:$email,:$password) {
+
                 $sth = $dbh.prepare(q:to/STATEMENT/);
                     INSERT INTO accounts (username, email, password, date)
                     VALUES ( ?, ?, ?, ? )
                     STATEMENT
 
-                    my $date = Str.DateTime.now;
-                    my $count = $sth.execute($username, $email, $password, $date);
+                my $date = Str(DateTime.now);
+                my $count = $sth.execute($username, $email, $password, $date);
 
                 #IF USERNAME EXISTS
                 CATCH {
-                    default { content 'text/html','USERNAME ALREADY EXITS'; }
-                    return;
-                    }
+                    default {
+                       say 'Error caught:  .message';
+                       content 'text/html','USERNAME ALREADY EXITS';
+                     }
+                     return;
+                }
 
-                    if $count == 1 {
-                        content 'text/html','SUCCESS';
-                        }
+                if $count == 1 {
+                    content 'text/html','SUCCESS';
+                }
             }
         }
     }
