@@ -15,6 +15,8 @@ Is a module for perl6 that substitutes variables in text files for variables in 
 
 > my %dict = name => "Jeff";
 
-> interpretBasic "Hi there {{name}}", %dict;
+> interpretBasic "Hi there {{name}}!", %dict;
+
+    Hi there Jeff!
 
 Will return text where {{name}} will be replaced with the corresponding key-value from %dict.
