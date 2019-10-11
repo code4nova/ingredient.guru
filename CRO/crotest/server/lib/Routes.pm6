@@ -9,8 +9,10 @@ my %attr = (
     RaiseError => 0,
 );
     
+#Opens Connection
 my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
 
+#Create SQL Table
 my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,24 +28,34 @@ my $sth = $dbh.do(q:to/STATEMENT/);
 
 sub routes() is export {
     route {
+
+        #Static Page HTML
         get -> {
             static 'static/index.html'
         }   
+
+        #Website Paths
         get -> 'static', *@path {
             static 'static', @path;
-        }   
+        }
+        
+        #Retrieve Info From register.html   
         post -> 'posts' {
             request-body -> (:$username,:$email,:$password) {
-
+                
+                #SQL Insert Statment
                 $sth = $dbh.prepare(q:to/STATEMENT/);
                     INSERT INTO accounts (username, email, password, date)
                     VALUES ( ?, ?, ?, ? )
                     STATEMENT
 
+                #Retrieves Date and Time
                 my $date = Str(DateTime.now);
+
+                #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
                 my $count = $sth.execute($username, $email, $password, $date);
 
-                #IF USERNAME EXISTS
+                #Errors (i.e. Username Already Exists)
                 CATCH {
                     default {
                        say 'Error caught:  .message';
@@ -52,6 +64,7 @@ sub routes() is export {
                      return;
                 }
 
+                #No Problems | Account Created
                 if $count == 1 {
                     content 'text/html','SUCCESS';
                 }
