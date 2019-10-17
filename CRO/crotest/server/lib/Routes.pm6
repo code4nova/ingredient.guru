@@ -51,7 +51,7 @@ sub routes() is export {
                     STATEMENT
                 
                 #Hash Password
-                my $hashpassword = sha256 $password.encode: 'utf8-c8';
+                my $hashpassword = sha256-hex $password.encode: 'utf8-c8';
 
                 #Retrieves Date and Time
                 my $date = Str(DateTime.now);
@@ -79,7 +79,7 @@ sub routes() is export {
             request-body -> (:$userlog,:$passlog) {
             
                 #Hash Password At Login
-                my $hashlogin = sha256 $passlog.encode: 'utf8-c8';
+                my $hashlogin = sha256-hex $passlog.encode: 'utf8-c8';
 
                 #SQL searches for USERNAME
                 $sth = $dbh.prepare(q:to/STATEMENT/);
@@ -87,11 +87,25 @@ sub routes() is export {
                     STATEMENT
 
                 #Checks for Username Inputted by User
-                my $catch = $sth.execute($userlog);
+                $sth.execute($userlog);
+                my $result = $sth.allrows;
+                if $result.elems >= 1 {
+                    $sth = $dbh.prepare(q:to/STATEMENT/);
+                        select password from accounts WHERE password = (?)
+                        STATEMENT
+                    $sth.execute($hashlogin);
+
+                    my $hash = $sth.allrows[0]; 
+
+                    if $hashlogin eq $hash {
+                        content 'text/html',"Login Successful";
+                    }else {
+                        content 'text/html', "Incorrect Password";
+                    }
+                } else {
+                        content 'text/html','User Not Found';
+                        }
                 
-                if $catch = $userlog {
-                    content 'text/html','LOGIN SUCCESSFUL';
-                }
             }
         }
     }
