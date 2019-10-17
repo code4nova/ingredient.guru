@@ -9,7 +9,7 @@
     ""
   ],
   "version": "0.0.1",
-  "name": "template-cro",
+  "name": "server-cro",
   "depends": [
     "Cro::HTTP"
   ],

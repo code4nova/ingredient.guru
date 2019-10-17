@@ -1,15 +1,15 @@
 ---
-name: template-cro
+name: cro-server
 entrypoint: service.p6
 links:  []
 env:  []
-id: template-cro
+id: cro-server
 endpoints: 
   - 
     name: HTTP
-    host-env: TEMPLATE_CRO_HOST
+    host-env: CRO_SERVER_HOST
     protocol: http
-    port-env: TEMPLATE_CRO_PORT
+    port-env: CRO_SERVER_PORT
     id: http
 cro: 1
 ...
