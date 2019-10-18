@@ -35,10 +35,19 @@ sub routes() is export {
         get -> 'client2'{
             
         }
+        get -> 'cookies3'{
+            my $time = DateTime.now.later(:5minutes)
+            my $c = Cro::HTTP::Cookie.new(name => "testc", value => $val, expires => $time);
+            set-cookie "y-cookie", "derp";
+            content 'text/html', 'yay';
+        }
+        get -> 'cookies4', :$y-cookie! is cookie {
+            content 'text/html', "yayyayyyyyyy {$y-cookie}";
+        }
         get -> 'cookies' , :$set ,:$val {
             my $req = Cro::HTTP::Request.new(path => '/cookies');
             if $set {
-                my $time = DateTime.now.later(:5minutes);
+                my $time = DateTime.now.later(:5minutes)
                 my $c = Cro::HTTP::Cookie.new(name => "testc", value => $val, expires => $time);
                 $req.add-cookie($c);
             }
