@@ -74,6 +74,7 @@ sub routes() is export {
                 }
             }
         }
+        #Authentication
         post -> 'login' {
             #Retrieving Login Variables
             request-body -> (:$userlog,:$passlog) {
@@ -81,31 +82,37 @@ sub routes() is export {
                 #Hash Password At Login
                 my $hashlogin = sha256-hex $passlog.encode: 'utf8-c8';
 
-                #SQL searches for USERNAME
+                #Select Statement to find username
                 $sth = $dbh.prepare(q:to/STATEMENT/);
                     select username from accounts WHERE username = (?)
                     STATEMENT
 
-                #Checks for Username Inputted by User
+                #Executes Select statement
                 $sth.execute($userlog);
+
+                #Stores the result
                 my $result = $sth.allrows;
+
+                #Starts to check password if a username is found 
                 if $result.elems >= 1 {
                     $sth = $dbh.prepare(q:to/STATEMENT/);
                         select password from accounts WHERE password = (?)
                         STATEMENT
                     $sth.execute($hashlogin);
 
+                    #Stores the returned hash from database
                     my $hash = $sth.allrows[0]; 
 
+                    #Checks if hashs match and gives webpage response
                     if $hashlogin eq $hash {
                         content 'text/html',"Login Successful";
-                    }else {
-                        content 'text/html', "Incorrect Password";
+                    } else {
+                        content 'text/html', "Login Failed";
                     }
+                #Completes first if statment
                 } else {
-                        content 'text/html','User Not Found';
-                        }
-                
+                        content 'text/html','Login Failed';
+                }
             }
         }
     }
