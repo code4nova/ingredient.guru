@@ -17,6 +17,13 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
+my $sth = $dbh.do(q:to/STATEMENT/);
+    CREATE TABLE IF NOT EXISTS tokens (
+    user        PRIMARY KEY,
+    hash        TEXT
+    )
+    STATEMENT
+
 sub routes() is export {
     route {
 
@@ -102,7 +109,6 @@ sub routes() is export {
                         #at stands for authentication token
                         my $time = DateTime.now.later(:5minutes);
                         my $c = Cro::HTTP::Cookie.new(name => "at", value => "beans", expires => $time);
-                        #set-cookie name => "at", value => "beansss";
                         my $token = sha256-hex $time.say ~ $userlog;
                         set-cookie 'at', $token, expires => $time;
                         content 'text/html',"Login Successful";
