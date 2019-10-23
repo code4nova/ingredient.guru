@@ -111,7 +111,14 @@ sub routes() is export {
                         my $c = Cro::HTTP::Cookie.new(name => "at", value => "beans", expires => $time);
                         my $token = sha256-hex $time.say ~ $userlog;
                         set-cookie 'at', $token, expires => $time;
-                        content 'text/html',"Login Successful";
+                        content 'text/html','Login Successful';
+
+                        #INSERT STATEMENT TO BE USED LATER
+                        #ALSO, hash may be a bad name. If it breaks, change the name
+                        $sth = $dbh.prepare(q:to/STATEMENT/);
+                            insert into tokens (user, hash) 
+                            VALUES (?,?)
+                        $sth.execute($userlog, $token)
                     } else {
                         content 'text/html', "Login Failed";
                     }
