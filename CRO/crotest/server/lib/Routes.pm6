@@ -1,19 +1,12 @@
 use Cro::HTTP::Router;
 use Digest::SHA256::Native;
 use DBIish;
+use Cro::HTTP::Cookie;
 
-### Attributes to pass to DBI->connect() to disable automatic 
-### error checking
-my %attr = (
-    database => '../ingredient.db', 
-    PrintError => 1, 
-    RaiseError => 0,
-);
-    
 #Opens Connection
-my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
+my $dbh = DBIish.connect( 'SQLite', database => './ingredient.db' );
 
-#Create SQL Table
+#Create SQL Table If Not There
 my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,8 +17,12 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
-#$dbh.dispose;
-
+my $sth = $dbh.do(q:to/STATEMENT/);
+    CREATE TABLE IF NOT EXISTS tokens (
+    user        PRIMARY KEY,
+    hash        TEXT
+    )
+    STATEMENT
 
 sub routes() is export {
     route {
@@ -75,7 +72,11 @@ sub routes() is export {
             }
         }
         #Authentication
-        post -> 'login' {
+        get -> 'login', :$at is cookie {
+            with $at {content 'text/html','Authentication token found: ' ~ $at}
+            else {static 'static/signin.html'}
+        }
+        post -> 'login' , 'authenticate' {
             #Retrieving Login Variables
             request-body -> (:$userlog,:$passlog) {
             
@@ -105,6 +106,11 @@ sub routes() is export {
 
                     #Checks if hashs match and gives webpage response
                     if $hashlogin eq $hash {
+                        #at stands for authentication token
+                        my $time = DateTime.now.later(:5minutes);
+                        my $c = Cro::HTTP::Cookie.new(name => "at", value => "beans", expires => $time);
+                        my $token = sha256-hex $time.say ~ $userlog;
+                        set-cookie 'at', $token, expires => $time;
                         content 'text/html',"Login Successful";
                     } else {
                         content 'text/html', "Login Failed";
