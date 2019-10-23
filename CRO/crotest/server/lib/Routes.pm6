@@ -4,7 +4,7 @@ use DBIish;
 use Cro::HTTP::Cookie;
 
 #Opens Connection
-my $dbh = DBIish.connect( 'SQLite', database => './ingredient.db' );
+my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
 
 #Create SQL Table If Not There
 my $sth = $dbh.do(q:to/STATEMENT/);
