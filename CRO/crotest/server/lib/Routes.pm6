@@ -17,7 +17,7 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
-my $sth = $dbh.do(q:to/STATEMENT/);
+$sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS tokens (
     user        PRIMARY KEY,
     hash        TEXT
