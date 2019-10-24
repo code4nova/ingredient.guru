@@ -115,10 +115,10 @@ sub routes() is export {
 
                         #INSERT STATEMENT TO BE USED LATER
                         #ALSO, hash may be a bad name. If it breaks, change the name
-                        $sth = $dbh.prepare(q:to/STATEMENT/);
-                            insert into tokens (user, hash) 
-                            VALUES (?,?)
-                        $sth.execute($userlog, $token)
+                        #$sth = $dbh.prepare(q:to/STATEMENT/);
+                        #    insert into tokens (user, hash) 
+                        #    VALUES (?,?)
+                        #$sth.execute($userlog, $token)
                     } else {
                         content 'text/html', "Login Failed";
                     }
