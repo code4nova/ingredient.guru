@@ -55,6 +55,12 @@ sub routes() is export {
 
                 #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
                 my $count = $sth.execute($username, $email, $hashpassword, $date);
+                
+                #$sth = $dbh.prepare(q:to/STATEMENT/);
+                #    insert into tokens (user, hash) 
+                #    VALUES (?,?)
+                #    STATEMENT
+                #$sth.execute($username,"blank");
 
                 #Errors (i.e. Username Already Exists)
                 CATCH {
@@ -107,17 +113,17 @@ sub routes() is export {
                     #Checks if hashs match and gives webpage response
                     if $hashlogin eq $hash {
                         #at stands for authentication token
-                        my $time = DateTime.now.later(:5minutes);
-                        my $c = Cro::HTTP::Cookie.new(name => "at", value => "beans", expires => $time);
+                        my $time = DateTime.now.later(:15minutes);
                         my $token = sha256-hex $time.say ~ $userlog;
-                        set-cookie 'at', $token, expires => $time;
+                        set-cookie 'authtoken', $token, expires => $time;
                         content 'text/html','Login Successful';
 
                         #INSERT STATEMENT TO BE USED LATER
                         #ALSO, hash may be a bad name. If it breaks, change the name
                         #$sth = $dbh.prepare(q:to/STATEMENT/);
-                        #    insert into tokens (user, hash) 
-                        #    VALUES (?,?)
+                        #   UPDATE tokens
+                        #   set hash = (?)
+                        #   where user = (?)
                         #$sth.execute($userlog, $token)
                     } else {
                         content 'text/html', "Login Failed";
