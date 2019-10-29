@@ -29,11 +29,14 @@ sub routes() is export {
 
         #Static Page HTML
         get -> {
-            static 'static/index.html'
+            static 'static/index.html';
         }   
         
+        get -> 'register' {
+            static 'static/register.html';
+        }
         #Retrieve Info From register.html   
-        post -> 'register' {
+        post -> 'register', 'post' {
             request-body -> (:$username,:$email,:$password) {
                 
                 #SQL Insert Statment
@@ -81,9 +84,10 @@ sub routes() is export {
                     STATEMENT 
                     
                 $sth.execute($authtoken);
-                
-                if $sth.allrows.elems >= 1 {
-                    content 'text/html','Successful Login: Welcome' ~ $sth.allrows();
+                my $result = $sth.allrows;
+
+                if $result.elems >= 1 {
+                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0];
                 }else {
                     content 'text/html', 'BAD Boi';
                 }
