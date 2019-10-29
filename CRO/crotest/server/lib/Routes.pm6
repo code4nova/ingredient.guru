@@ -78,8 +78,11 @@ sub routes() is export {
             }
         }
         #Authentication
-        get -> 'login', :$at is cookie {
-            with $at {content 'text/html','Authentication token found: ' ~ $at}
+        get -> 'login', :$authtoken is cookie {
+            with $at {
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    selecct username from token where 
+                content 'text/html','Authentication token found: ' ~ $at}
             else {static 'static/signin.html'}
         }
         post -> 'login' , 'authenticate' {
