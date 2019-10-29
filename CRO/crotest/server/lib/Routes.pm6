@@ -31,11 +31,6 @@ sub routes() is export {
         get -> {
             static 'static/index.html'
         }   
-
-        #Website Paths
-        get -> 'static', *@path {
-            static 'static', @path;
-        }
         
         #Retrieve Info From register.html   
         post -> 'register' {
@@ -56,11 +51,12 @@ sub routes() is export {
                 #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
                 my $count = $sth.execute($username, $email, $hashpassword, $date);
                 
-                #$sth = $dbh.prepare(q:to/STATEMENT/);
-                #    insert into tokens (user, hash) 
-                #    VALUES (?,?)
-                #    STATEMENT
-                #$sth.execute($username,"blank");
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    insert into tokens (user, hash) 
+                    VALUES (?,?)
+                    STATEMENT
+                
+                $sth.execute($username,"");
 
                 #Errors (i.e. Username Already Exists)
                 CATCH {
@@ -79,14 +75,22 @@ sub routes() is export {
         }
         #Authentication
         get -> 'login', :$authtoken is cookie {
-            with $at {
+            with $authtoken {
                 $sth = $dbh.prepare(q:to/STATEMENT/);
-                    selecct username from token where 
-                content 'text/html','Authentication token found: ' ~ $at}
+                    select user from tokens where hash = (?)
+                    STATEMENT 
+                    
+                $sth.execute($authtoken);
+                
+                if $sth.allrows.elems >= 1 {
+                    content 'text/html','Successful Login: Welcome' ~ $sth.allrows();
+                }else {
+                    content 'text/html', 'BAD Boi';
+                }
+            }
             else {static 'static/signin.html'}
         }
         post -> 'login' , 'authenticate' {
-            #Retrieving Login Variables
             request-body -> (:$userlog,:$passlog) {
             
                 #Hash Password At Login
@@ -116,18 +120,20 @@ sub routes() is export {
                     #Checks if hashs match and gives webpage response
                     if $hashlogin eq $hash {
                         #at stands for authentication token
-                        my $time = DateTime.now.later(:15minutes);
+                        my $time = DateTime.now.later(:5minutes);
                         my $token = sha256-hex $time.say ~ $userlog;
                         set-cookie 'authtoken', $token, expires => $time;
+                        
+                        $sth = $dbh.prepare(q:to/STATEMENT/);
+                            UPDATE tokens 
+                            SET hash = (?)
+                            WHERE user = (?)
+                            STATEMENT
+
+                        $sth.execute($token,$userlog);
+
                         content 'text/html','Login Successful';
 
-                        #INSERT STATEMENT TO BE USED LATER
-                        #ALSO, hash may be a bad name. If it breaks, change the name
-                        #$sth = $dbh.prepare(q:to/STATEMENT/);
-                        #   UPDATE tokens
-                        #   set hash = (?)
-                        #   where user = (?)
-                        #$sth.execute($userlog, $token)
                     } else {
                         content 'text/html', "Login Failed";
                     }
