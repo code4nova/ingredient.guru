@@ -35,6 +35,10 @@ sub routes() is export {
         get -> 'register' {
             static 'static/register.html';
         }
+        
+        get -> 'css' {
+            static 'static/style.css';
+        }        
         #Retrieve Info From register.html   
         post -> 'register', 'post' {
             request-body -> (:$username,:$email,:$password) {
