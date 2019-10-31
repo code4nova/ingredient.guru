@@ -1,19 +1,12 @@
 use Cro::HTTP::Router;
 use Digest::SHA256::Native;
 use DBIish;
+use Cro::HTTP::Cookie;
 
-### Attributes to pass to DBI->connect() to disable automatic 
-### error checking
-my %attr = (
-    database => '../ingredient.db', 
-    PrintError => 1, 
-    RaiseError => 0,
-);
-    
 #Opens Connection
 my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
 
-#Create SQL Table
+#Create SQL Table If Not There
 my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,24 +17,30 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
-#$dbh.dispose;
-
+$sth = $dbh.do(q:to/STATEMENT/);
+    CREATE TABLE IF NOT EXISTS tokens (
+    user        PRIMARY KEY,
+    hash        TEXT
+    )
+    STATEMENT
 
 sub routes() is export {
     route {
 
         #Static Page HTML
         get -> {
-            static 'static/index.html'
+            static 'static/index.html';
         }   
-
-        #Website Paths
-        get -> 'static', *@path {
-            static 'static', @path;
+        
+        get -> 'register' {
+            static 'static/register.html';
         }
         
+        get -> 'css' {
+            static 'static/style.css';
+        }        
         #Retrieve Info From register.html   
-        post -> 'register' {
+        post -> 'register', 'post' {
             request-body -> (:$username,:$email,:$password) {
                 
                 #SQL Insert Statment
@@ -58,6 +57,13 @@ sub routes() is export {
 
                 #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
                 my $count = $sth.execute($username, $email, $hashpassword, $date);
+                
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    insert into tokens (user, hash) 
+                    VALUES (?,?)
+                    STATEMENT
+                
+                $sth.execute($username,"");
 
                 #Errors (i.e. Username Already Exists)
                 CATCH {
@@ -75,8 +81,24 @@ sub routes() is export {
             }
         }
         #Authentication
-        post -> 'login' {
-            #Retrieving Login Variables
+        get -> 'login', :$authtoken is cookie {
+            with $authtoken {
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    select user from tokens where hash = (?)
+                    STATEMENT 
+                    
+                $sth.execute($authtoken);
+                my $result = $sth.allrows;
+
+                if $result.elems >= 1 {
+                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0] ~ '<br><a href="/">Logout</a>';
+                }else {
+                    content 'text/html', 'BAD Boi';
+                }
+            }
+            else {static 'static/signin.html'}
+        } 
+        post -> 'login' , 'authenticate' {
             request-body -> (:$userlog,:$passlog) {
             
                 #Hash Password At Login
@@ -105,7 +127,21 @@ sub routes() is export {
 
                     #Checks if hashs match and gives webpage response
                     if $hashlogin eq $hash {
-                        content 'text/html',"Login Successful";
+                        #at stands for authentication token
+                        my $time = DateTime.now.later(:5minutes);
+                        my $token = sha256-hex $time.say ~ $userlog;
+                        set-cookie 'authtoken', $token, expires => $time;
+                        
+                        $sth = $dbh.prepare(q:to/STATEMENT/);
+                            UPDATE tokens 
+                            SET hash = (?)
+                            WHERE user = (?)
+                            STATEMENT
+
+                        $sth.execute($token,$userlog);
+
+                        content 'text/html','Login Successful';
+
                     } else {
                         content 'text/html', "Login Failed";
                     }

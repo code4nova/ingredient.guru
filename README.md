@@ -2,21 +2,21 @@
 # ingredient.guru
 This is the central repo for work on the Ingredient.guru project
 
-## Postgres folder:
-Contains all work that has been done on the database side. Includes schemas for the main database and makefiles.
-
 ## CRO folder:
-Contains experimental builds of CRO stubs; may be bug prone.
+Contains experimental builds of CRO stubs; may be bug prone. The main folder is "crotest" which includes the HTML and perl files required to run the CRO server
 
-### HTML-P6
-Is a module for perl6 that substitutes variables in text files for variables in the program. 
+### crotest
+Contains the latest updated code with all the features
+* Cookies
+* Register
+* Login/Authentication
+* Registering Info to SQLite3 Database
 
-> use HTML-P6::Basic;
+### session
+Contains all the features required up to Issue #7. Mainly Focuses on Cookies
 
-> my %dict = name => "Jeff";
+### sign-in-test
+Contains several examples of Cookies and how to save information.
 
-> interpretBasic "Hi there {{name}}!", %dict;
 
-    Hi there Jeff!
 
-Will return text where {{name}} will be replaced with the corresponding key-value from %dict.
