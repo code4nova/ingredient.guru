@@ -91,13 +91,15 @@ sub routes() is export {
                 my $result = $sth.allrows;
 
                 if $result.elems >= 1 {
-                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0];
+                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0] ~ '<br><a href="/">Logout</a>';
                 }else {
                     content 'text/html', 'BAD Boi';
                 }
             }
             else {static 'static/signin.html'}
         }
+        post -> 'logout' {
+            
         post -> 'login' , 'authenticate' {
             request-body -> (:$userlog,:$passlog) {
             
