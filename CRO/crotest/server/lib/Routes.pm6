@@ -97,9 +97,7 @@ sub routes() is export {
                 }
             }
             else {static 'static/signin.html'}
-        }
-        post -> 'logout' {
-            
+        } 
         post -> 'login' , 'authenticate' {
             request-body -> (:$userlog,:$passlog) {
             
