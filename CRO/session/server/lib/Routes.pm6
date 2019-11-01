@@ -73,10 +73,6 @@ sub routes() is export {
         }
         #Authentication
         get -> 'login', :$at is cookie {
-            #So this section here tries to see if there is a cookie named "at" on the clients browser
-            #this cookie stores a hash that is used to authenticate the user 
-            #currently it only checks if the cookie exists and does not match it with any users
-
             with $at {content 'text/html','Authentication token found: ' ~ $at}
             else {static 'static/signin.html'}
         }
@@ -115,7 +111,6 @@ sub routes() is export {
                         my $c = Cro::HTTP::Cookie.new(name => "at", value => "beans", expires => $time);
                         my $token = sha256-hex $time.say ~ $userlog;
                         set-cookie 'at', $token, expires => $time;
-                        #above stores the cookie named "at" in the users browser
                         content 'text/html',"Login Successful";
                     } else {
                         content 'text/html', "Login Failed";
