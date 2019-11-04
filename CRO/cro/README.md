@@ -1,7 +1,9 @@
-# Perl6 Cro Experimentation 
+# Perl6 CRO Official Ingredient.GURU Web Server
 
 ### Simple Webserver 
-*  Using SQLite3 Implementation Instead of PostgreSQL
-*  Testing for Ingredient.Guru Final Website
+*  Final Application for Ingredient.Guru
 
-MORE TO COME IN THE FUTURE!
+#### TO DO
+*  Will Contain Authentication with the Cro AUTH Module
+*  Re-Implement Cookies
+
