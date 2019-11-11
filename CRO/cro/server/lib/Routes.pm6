@@ -1,7 +1,9 @@
-use Cro::HTTP::Router;
 use Digest::SHA256::Native;
 use DBIish;
+use Cro::HTTP::Router;
 use Cro::HTTP::Cookie;
+use Cro::HTTP::Auth;
+use Cro::HTTP::Session::InMemory;
 
 #Opens Connection
 my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
@@ -24,8 +26,20 @@ $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
+
+class UserSession does Cro::HTTP::Auth {
+    has $.username is rw;
+
+    method logged-in() {
+        defined $!username;
+        }
+}
+
 sub routes() is export {
     route {
+	before Cro::HTTP::Session::InMemory[UserSession].new;
+
+        subset LoggedIn of UserSession where *.logged-in;
 
         #Static Page HTML
         get -> {
@@ -81,79 +95,52 @@ sub routes() is export {
                 }
             }
         }
-        #Authentication
-        get -> 'login', :$authtoken is cookie {
-            with $authtoken {
-                $sth = $dbh.prepare(q:to/STATEMENT/);
-                    select user from tokens where hash = (?)
-                    STATEMENT 
-                    
-                $sth.execute($authtoken);
-                my $result = $sth.allrows;
 
-                if $result.elems >= 1 {
-                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0] ~ '<br><a href="/logout">Logout</a>';
-                }else {
-                    content 'text/html', 'BAD Boi';
-                }
+	#Authentication
+        get -> UserSession $s, 'login' {
+            if $s.logged-in {
+                content 'text/html','Successful Login: Welcome' ~ " " ~$s.username ~ '<br><a href="/logout">Logout</a>';
             }
             else {static 'static/signin.html'}
         }
-        post -> 'login' , 'authenticate' {
-            request-body -> (:$userlog,:$passlog) {
-            
+ 
+	post -> UserSession $user, 'login', 'authenticate' {
+            request-body -> (:$userlog, :$passlog, *%) {
+                if valid-user-pass($userlog, $passlog) {
+                    $user.username = $userlog;
+		    say "Successful login";
+                    content 'text/html','Successful Login: Welcome' ~ " " ~$user.username ~ '<br><a href="/logout">Logout</a>';
+                }
+                else {
+		    say "Bad login";
+                    content 'text/html', "Bad username/password";
+                }
+            }
+        }
+
+	# Check if the username/password combination is valid
+        sub valid-user-pass($username, $password) {
                 #Hash Password At Login
-                my $hashlogin = sha256-hex $passlog.encode: 'utf8-c8';
+                my $hashlogin = sha256-hex $password.encode: 'utf8-c8';
 
                 #Select Statement to find username
                 $sth = $dbh.prepare(q:to/STATEMENT/);
-                    select username from accounts WHERE username = (?)
+                    select username from accounts WHERE username = (?) and password = (?)
                     STATEMENT
 
                 #Executes Select statement
-                $sth.execute($userlog);
+                $sth.execute($username, $hashlogin);
 
                 #Stores the result
                 my $result = $sth.allrows;
 
-                #Starts to check password if a username is found 
-                if $result.elems >= 1 {
-                    $sth = $dbh.prepare(q:to/STATEMENT/);
-                        select password from accounts WHERE password = (?)
-                        STATEMENT
-                    $sth.execute($hashlogin);
+                #If there is more than one row, the username and password matched
+                return $result.elems >= 1;
+    	}
 
-                    #Stores the returned hash from database
-                    my $hash = $sth.allrows[0]; 
-
-                    #Checks if hashs match and gives webpage response
-                    if $hashlogin eq $hash {
-                        #at stands for authentication token
-                        my $time = DateTime.now.later(:5minutes);
-                        my $token = sha256-hex $time.say ~ $userlog;
-                        set-cookie 'authtoken', $token, expires => $time;
-                        
-                        $sth = $dbh.prepare(q:to/STATEMENT/);
-                            UPDATE tokens 
-                            SET hash = (?)
-                            WHERE user = (?)
-                            STATEMENT
-
-                        $sth.execute($token,$userlog);
-
-                        content 'text/html','Login Successful';
-
-                    } else {
-                        content 'text/html', "Login Failed";
-                    }
-                #Completes first if statment
-                } else {
-                        content 'text/html','Login Failed';
-                }
-            }
-        }
-	post -> 'logout' {
-		#ADD DELETE COOKIE HERE
+	get -> UserSession $s, 'logout' {
+	    $s.username = Nil;
+	    static 'static/signin.html'
 	}
     }
 }
