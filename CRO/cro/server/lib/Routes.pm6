@@ -14,7 +14,7 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
-    email       TEXT,
+    email       TEXT type UNIQUE,
     password    TEXT,
     date        TEXT,
     code	INT,
@@ -57,6 +57,10 @@ sub routes() is export {
         get -> 'css' {
             static 'static/style.css';
         }
+	
+	get -> 'confirm' {
+		static 'static/confirm.html';
+		}
 
         #Retrieve Info From register.html   
         post -> 'register', 'post' {
@@ -90,7 +94,8 @@ sub routes() is export {
                 #Errors (i.e. Username Already Exists)
                 CATCH {
                     default {
-                       say 'Error caught:  .message';
+                       say 'Error caught:';
+		       $*ERR.say: .message;
                        content 'text/html','USERNAME ALREADY EXITS';
                      }
                      return;
@@ -98,16 +103,15 @@ sub routes() is export {
 
                 #No Problems | Account Created
                 if $count == 1 {
-                    static 'static/confirm.html';
-		    
+		    static 'static/confirm.html';
+
 		    #Prep email
 		    my $from = "ingredient@arltech.com";
 		    my $to = "$email";
-		    my $message = "Subject: Ingredient Guru Code
-		    Message: Your 6 Digit Number: $code";
+		    my $message = "Your 6 Digit Number: $code";
 
 		    #Send email
-		    my $client = Net::SMTP.new(:server("127.0.0.1"), :debug);
+		    my $client = Net::SMTP.new(:server("127.0.0.1"), :port(25), :debug);
 		    $client.send($from, $to, $message);
 		    $client.quit;
                 }
@@ -118,23 +122,17 @@ sub routes() is export {
 
 	#Get Statement retirving code and username
 	get -> 'confirm' {
-	    request-body -> (:$email,:$code) {
-		
-		$sth = $dbh.prepare(q:to/STATEMENT/);
-                    SELECT email,code FROM accounts WHERE email = (?) and code = (?)
-                    STATEMENT
+	    request-body -> (:$code,:$email) {
+	 	say $code;
+	    }
+        }       
+
+		#$sth = $dbh.prepare(q:to/STATEMENT/);
+		    #SELECT email,code FROM accounts WHERE email = (?) and code = (?)
+		    #STATEMENT
 		    
-		$sth.execute($email, $code);
-	    	
-		my $result = $sth.allrows;
+		    #my $result = $sth.execute($email, $code);	
 		
-		content	'text/html', 'COOL';
-		
-		#if $result.elems == 1 {
-			#content	'text/html', 'COOL';
-			#}
-         }
-     }
 	#Authentication
         get -> UserSession $s, 'login' {
             if $s.logged-in {
@@ -156,21 +154,6 @@ sub routes() is export {
                 }
             }
         }
-
-# Confirm email form/processor
-#	get -> 'confirm', 'email' {
-#             request-body -> (:$userlog,:$regcode) {
-#		if $userlog == "" || $regcode == "" {
-#		say $userlog;
-#		static 'static/confirm.html';
-               
-#                else {
-#                    content 'text/html','Confirm Account' ~$userlog;
-#                }
-#            }
-#        }
-
-	# Check if the username/password combination is valid
         sub valid-user-pass($username, $password) {
                 #Hash Password At Login
                 my $hashlogin = sha256-hex $password.encode: 'utf8-c8';
