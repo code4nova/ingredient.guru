@@ -4,21 +4,25 @@ use Cro::HTTP::Router;
 use Cro::HTTP::Cookie;
 use Cro::HTTP::Auth;
 use Cro::HTTP::Session::InMemory;
+use Net::SMTP;
 
 #Opens Connection
 my $dbh = DBIish.connect( 'SQLite', database => '../ingredient.db' );
 
-#Create SQL Table If Not There
+#Create Verified Account Names
 my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
     email       TEXT,
     password    TEXT,
-    date        TEXT
+    date        TEXT,
+    code	INT,
+    verified	TEXT
     )
     STATEMENT
 
+#For Session and Cookies
 $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS tokens (
     user        PRIMARY KEY,
@@ -26,7 +30,7 @@ $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
-
+# Cro::HTTP::Auth Stuff for Session Creation
 class UserSession does Cro::HTTP::Auth {
     has $.username is rw;
 
@@ -60,8 +64,8 @@ sub routes() is export {
                 
                 #SQL Insert Statment
                 $sth = $dbh.prepare(q:to/STATEMENT/);
-                    INSERT INTO accounts (username, email, password, date)
-                    VALUES ( ?, ?, ?, ? )
+                    INSERT INTO accounts (username, email, password, date, code, verified)
+                    VALUES ( ?, ?, ?, ?, ?, ? )
                     STATEMENT
                 
                 #Hash Password
@@ -70,8 +74,11 @@ sub routes() is export {
                 #Retrieves Date and Time
                 my $date = Str(DateTime.now);
 
+		#Generate Random 6 Digit Code
+		my $code = (100000^..999999).pick;
+
                 #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
-                my $count = $sth.execute($username, $email, $hashpassword, $date);
+                my $count = $sth.execute($username, $email, $hashpassword, $date, $code, "FALSE");
                 
                 $sth = $dbh.prepare(q:to/STATEMENT/);
                     insert into tokens (user, hash) 
@@ -91,11 +98,43 @@ sub routes() is export {
 
                 #No Problems | Account Created
                 if $count == 1 {
-                    content 'text/html','SUCCESS';
+                    static 'static/confirm.html';
+		    
+		    #Prep email
+		    my $from = "ingredient@arltech.com";
+		    my $to = "$email";
+		    my $message = "Subject: Ingredient Guru Code
+		    Message: Your 6 Digit Number: $code";
+
+		    #Send email
+		    my $client = Net::SMTP.new(:server("127.0.0.1"), :debug);
+		    $client.send($from, $to, $message);
+		    $client.quit;
                 }
+
+		# construct URL:  http://[server]/confirm/email?userlog='~$userlog~'&code='~$code
             }
         }
 
+	#Get Statement retirving code and username
+	get -> 'confirm' {
+	    request-body -> (:$email,:$code) {
+		
+		$sth = $dbh.prepare(q:to/STATEMENT/);
+                    SELECT email,code FROM accounts WHERE email = (?) and code = (?)
+                    STATEMENT
+		    
+		$sth.execute($email, $code);
+	    	
+		my $result = $sth.allrows;
+		
+		content	'text/html', 'COOL';
+		
+		#if $result.elems == 1 {
+			#content	'text/html', 'COOL';
+			#}
+         }
+     }
 	#Authentication
         get -> UserSession $s, 'login' {
             if $s.logged-in {
@@ -117,6 +156,19 @@ sub routes() is export {
                 }
             }
         }
+
+# Confirm email form/processor
+#	get -> 'confirm', 'email' {
+#             request-body -> (:$userlog,:$regcode) {
+#		if $userlog == "" || $regcode == "" {
+#		say $userlog;
+#		static 'static/confirm.html';
+               
+#                else {
+#                    content 'text/html','Confirm Account' ~$userlog;
+#                }
+#            }
+#        }
 
 	# Check if the username/password combination is valid
         sub valid-user-pass($username, $password) {
