@@ -14,7 +14,7 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
-    email       TEXT type UNIQUE,
+    email       TEXT,
     password    TEXT,
     date        TEXT,
     code	INT,
@@ -115,24 +115,22 @@ sub routes() is export {
 		    $client.send($from, $to, $message);
 		    $client.quit;
                 }
-
-		# construct URL:  http://[server]/confirm/email?userlog='~$userlog~'&code='~$code
-            }
+	    }
         }
+		# construct URL:  http://[server]/confirm/email?userlog='~$userlog~'&code='~$code
 
 	#Get Statement retirving code and username
-	get -> 'confirm' {
-	    request-body -> (:$code,:$email) {
-	 	say $code;
+	post -> 'confirm' {
+	    request-body -> (:$code,:$mail) {
+		#CODE CHECKING WITH DATABASE
+		$sth = $dbh.prepare(q:to/STATEMENT/);
+		    SELECT email, code FROM accounts WHERE code = (?) and email = (?)
+		    STATEMENT
+		my $result = $sth.execute($code, "'$mail'");
+	    	content 'text/html', $result;
 	    }
         }       
 
-		#$sth = $dbh.prepare(q:to/STATEMENT/);
-		    #SELECT email,code FROM accounts WHERE email = (?) and code = (?)
-		    #STATEMENT
-		    
-		    #my $result = $sth.execute($email, $code);	
-		
 	#Authentication
         get -> UserSession $s, 'login' {
             if $s.logged-in {
