@@ -126,8 +126,9 @@ sub routes() is export {
 		$sth = $dbh.prepare(q:to/STATEMENT/);
 		    SELECT email, code FROM accounts WHERE code = (?) and email = (?)
 		    STATEMENT
-		my $result = $sth.execute($code, "'$mail'");
-	    	content 'text/html', $result;
+		    $sth.execute($code, "'$mail'");
+		    my $test = $sth.allrows;
+	    	content 'text/html', $test;
 	    }
         }       
 
