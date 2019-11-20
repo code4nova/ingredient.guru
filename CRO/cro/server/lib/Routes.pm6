@@ -121,12 +121,12 @@ sub routes() is export {
 
 	#Get Statement retirving code and username
 	post -> 'confirm' {
-	    request-body -> (:$code,:$mail) {
+	    request-body -> (:$code,:$username) {
 		#CODE CHECKING WITH DATABASE
 		$sth = $dbh.prepare(q:to/STATEMENT/);
-		    SELECT email, code FROM accounts WHERE code = (?) and email = (?)
+		    SELECT username, code FROM accounts WHERE code = (?) and username = (?)
 		    STATEMENT
-		    $sth.execute($code, "'$mail'");
+		    $sth.execute($code, $username);
 		    my $test = $sth.allrows;
 	    	content 'text/html', $test;
 	    }
