@@ -124,11 +124,15 @@ sub routes() is export {
 	    request-body -> (:$code,:$username) {
 		#CODE CHECKING WITH DATABASE
 		$sth = $dbh.prepare(q:to/STATEMENT/);
-		    SELECT username, code FROM accounts WHERE code = (?) and username = (?)
+		    UPDATE accounts SET verified = "TRUE" WHERE username = (?) and code = (?)
 		    STATEMENT
-		    $sth.execute($code, $username);
-		    my $test = $sth.allrows;
-	    	content 'text/html', $test;
+			
+		    my $results = $sth.execute($username, $code);
+			if $results == 0 {
+		      	   content 'text/html', "INCORRECT CODE";
+	   		} else {
+	     		   content 'text/html', "ACCOUNT VERIFIED PLEASE LOGIN" ~ '<br><a href="/">Home</a>';
+		 }			   
 	    }
         }       
 
