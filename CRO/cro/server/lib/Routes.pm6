@@ -153,7 +153,7 @@ sub routes() is export {
                 }
                 else {
 		    say "Bad login";
-                    content 'text/html', "Bad username/password";
+                    content 'text/html', "Bad Username/Password and/or Account Not Verified" ~ '<br><a href="/confirm">Verify Account</a>';
                 }
             }
         }
@@ -163,7 +163,7 @@ sub routes() is export {
 
                 #Select Statement to find username
                 $sth = $dbh.prepare(q:to/STATEMENT/);
-                    select username from accounts WHERE username = (?) and password = (?)
+                    select username from accounts WHERE username = (?) and password = (?) and verified = "TRUE"
                     STATEMENT
 
                 #Executes Select statement
