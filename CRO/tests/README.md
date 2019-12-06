@@ -7,6 +7,6 @@ zef install App::Prove6
 ## Run Test
 prove6 --lib t/file.t6
 
-References
-https://docs.perl6.org/language/testing\
+References\
+https://docs.perl6.org/language/testing \
 https://docs.perl6.org/type/Test#sub_ok
