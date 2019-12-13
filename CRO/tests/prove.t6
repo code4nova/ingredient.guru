@@ -1,0 +1,8 @@
+use v6;
+use lib '.';
+use function;
+use Test;
+
+my $result = avg(2,4);
+
+ok($result eq 3, 'CORRECT');
