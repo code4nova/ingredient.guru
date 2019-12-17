@@ -20,8 +20,5 @@ Contains the latest updated code with all the features
 ### session
 Contains all the features required up to Issue #7. Mainly Focuses on Cookies
 
-### sign-in-test
-Contains several examples of Cookies and how to save information.
-
-
-
+### test
+Will contain information on the majority of test performed, while performing test driven development.
