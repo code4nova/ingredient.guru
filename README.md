@@ -3,13 +3,18 @@
 This is the central repo for work on the Ingredient.guru project
 
 ## CRO folder:
-Contains experimental builds of CRO stubs; may be bug prone. The main folder is "crotest" which includes the HTML and perl files required to run the CRO server
+Contains experimental builds of CRO stubs; may be bug prone. The main folder is "cro" which includes the HTML and perl files required to run the CRO server
+
+## cro
+Contains the current project being worked on
+* Sessions and Auth using CRO
+* Everything else
 
 ### crotest
 Contains the latest updated code with all the features
 * Cookies
 * Register
-* Login/Authentication
+* Login/Authentication (Old Way)
 * Registering Info to SQLite3 Database
 
 ### session
