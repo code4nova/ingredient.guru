@@ -5,7 +5,7 @@ This directory contains several tests performed with the "Test" module in Perl6.
 zef install App::Prove6
 
 ## Run Test
-prove6 --lib t/file.t6
+prove6 file.t6
 
 References\
 https://docs.perl6.org/type/Test#plan \
