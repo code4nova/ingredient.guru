@@ -1,5 +1,5 @@
 use lib '.';
-use function;
+use tools;
 use Test;
 
 plan 1;

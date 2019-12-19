@@ -1,6 +1,6 @@
 use Test;
 
-my $foo = 1+1;
+my $foo = 3+1;
 my $foo2 = 2;
 
 ok($foo eq $foo2, 'CORRECT');
