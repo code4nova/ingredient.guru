@@ -1,8 +1,12 @@
-use lib '.';
-use tools;
-use Test;
+use lib '.'; #Tells Perl6 to Search in the Current Directory
+use tools; #The Module we created in tools.pm6 (unit module)
+use Test; #Test Module to perform tests
 
-plan 1;
+#Declare the amount of tests that you plan one running. If you don't do this the test fails.
+plan 1; 
+
+#Avg is the function we called in tools.pm6
 my $result = avg(2,4);
 
+#Checks if the result is equal to the average of 2 and 4 and the test passes since result equals 3
 ok($result eq 3, 'CORRECT');
