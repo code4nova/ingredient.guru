@@ -1,12 +1,29 @@
-use lib '.'; #Tells Perl6 to Search in the Current Directory
-use tools; #The Module we created in tools.pm6 (unit module)
-use Test; #Test Module to perform tests
+use lib '.'; 
+use sign-in; 
+use Test; 
 
-#Declare the amount of tests that you plan one running. If you don't do this the test fails.
-plan 1; 
+#Plan
+plan 4; 
 
-#Avg is the function we called in tools.pm6
-my $result = avg(2,4);
+###########################################
+#####Tests for Verification of Account#####
+###########################################
 
-#Checks if the result is equal to the average of 2 and 4 and the test passes since result equals 3
-ok($result eq 3, 'CORRECT');
+#Working Test
+my $account-made = account-made("Hello", "test@test.com", "secret");
+ok($account-made = 1, 'Account Made');
+
+#Missing Value | Error Message is Long and Dumb
+my $account-missing = account-made("Hello", Nil, "secret");
+ok($account-missing = "DBDish::SQLite: Error: UNIQUE constraint failed: accounts.username (19)
+  in method execute at /usr/local/Cellar/rakudo-star/2019.03/share/perl6/site/sources/DE559529B32B6D348188B437156092A03C0433A1 (DBDish::SQLite::StatementHandle) line 45
+  in sub account-made at /Users/1013042/Repos/ingredient.guru/CRO/tests/sign-in.pm6 (sign-in) line 37
+  in block <unit> at prove.t6 line 18", 'Value Missing');
+
+#Correct Info | Email Correct
+my $account-email = email-valid("test@test.com");
+ok($account-email = True, 'Email Correct');
+
+#Incorrect Info | Email Incorrect
+#my $account-email-inc = email-valid("d");
+#ok($account-email-inc = False, 'Email Incorrect');
