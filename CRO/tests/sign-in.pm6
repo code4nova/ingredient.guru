@@ -19,6 +19,15 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
+    #Required for Testing Succesful Login
+    #$sth = $dbh.prepare(q:to/STATEMENT/);
+        #INSERT INTO accounts (username, email, password, date, code, verified)
+        #VALUES ( ?, ?, ?, ?, ?, ? )
+        #STATEMENT
+    
+    #$sth.execute("username", "test@test.com", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "10/14/17", "102842", "FALSE");
+
+
 sub account-made($username, $email, $password) is export {
     #SQL Insert Statment
         $sth = $dbh.prepare(q:to/STATEMENT/);
@@ -50,3 +59,14 @@ sub email-valid($input) is export {
     }
 }
 
+sub login($username, $password) is export {
+    my $hashlogin = sha256-hex $password.encode: 'utf8-c8';
+
+        #Select Statement to find username
+        $sth = $dbh.prepare(q:to/STATEMENT/);
+            select username from accounts WHERE username = (?) and password = (?) and verified = "TRUE"
+            STATEMENT
+
+        #Executes Select statement
+        return $sth.execute($username, $hashlogin);
+}

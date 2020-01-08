@@ -3,11 +3,11 @@ use sign-in;
 use Test; 
 
 #Plan
-plan 4; 
+plan 6; 
 
-###########################################
-#####Tests for Verification of Account#####
-###########################################
+##############################################
+##Tests for Verification/Creation of Account##
+##############################################
 
 #Working Test
 my $account-made = account-made("Hello", "test@test.com", "secret");
@@ -27,3 +27,23 @@ ok($account-email = True, 'Email Correct');
 #Incorrect Info | Email Incorrect
 my $email-inc = email-valid("notanemail");
 ok($email-inc = "False", 'Email Incorrect');
+
+
+
+###############################################
+###Tests for Authentication/Successful Login###
+###############################################
+
+#Successful Login
+my $login = login("Hello", "secret");
+ok($login = "1", 'Successful Login');
+
+#Incorrect Information
+my $login-inc = login("fakeusername", "badpassword");
+ok($login-inc = "0", 'Incorrect Info Login');
+
+
+#########################################
+##Checking if Application is Responding##
+#########################################
+

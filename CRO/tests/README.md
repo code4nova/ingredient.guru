@@ -16,3 +16,10 @@ https://docs.perl6.org/type/Test#sub_ok
 
 ## Import File
 Look at function.pm6 & prove.p6
+
+
+## Dependencies
+* Email::Valid
+* DBIish
+* Digest::SHA256::Native
+
