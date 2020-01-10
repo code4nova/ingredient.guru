@@ -15,7 +15,9 @@ https://docs.perl6.org/type/Test#sub_ok
 
 
 ## Import File
-Look at function.pm6 & prove.p6
+To import file you only have to call the file name of the .pm6 in the .t6. \
+**For Example:** We have a perl module file called hello.pm6 we want to say `use hello;` in our .t6 file
+
 
 
 ## Dependencies
