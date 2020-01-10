@@ -3,7 +3,7 @@ use sign-in;
 use Test; 
 
 #Plan
-plan 6; 
+plan 8; 
 
 ##############################################
 ##Tests for Verification/Creation of Account##
@@ -28,8 +28,6 @@ ok($account-email = True, 'Email Correct');
 my $email-inc = email-valid("notanemail");
 ok($email-inc = "False", 'Email Incorrect');
 
-
-
 ###############################################
 ###Tests for Authentication/Successful Login###
 ###############################################
@@ -47,3 +45,8 @@ ok($login-inc = "0", 'Incorrect Info Login');
 ##Checking if Application is Responding##
 #########################################
 
+my $heartbeat = account-made("Hello", "test@test.com", "secret");
+ok($heartbeat = "1", 'Heartbeat Test1');
+
+my $heartbeattest2 = login("Hello", "secret");
+ok($heartbeattest2 = "1", 'Heartbeat Test2');

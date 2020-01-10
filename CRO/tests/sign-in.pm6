@@ -1,5 +1,4 @@
 #Import Modules 
-unit module sign-in;
 use Digest::SHA256::Native;
 use DBIish;
 use Email::Valid;
@@ -45,7 +44,7 @@ sub account-made($username, $email, $password) is export {
     my $code = (100000^..999999).pick;
     
     #Inputs Data Into Database Using Prepare Statement (Outputs 1 for one line added, Outputs 0 for error)
-    return $sth.execute($username, $email, $hashpassword, $date, $code, "FALSE");
+    return $sth.execute($username, $email, $hashpassword, $date, $code, "TRUE");
 }
 
 sub email-valid($input) is export {
@@ -70,3 +69,4 @@ sub login($username, $password) is export {
         #Executes Select statement
         return $sth.execute($username, $hashlogin);
 }
+
