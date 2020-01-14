@@ -50,3 +50,8 @@ ok($heartbeat = "1", 'Heartbeat Test1');
 
 my $heartbeattest2 = login("Hello", "secret");
 ok($heartbeattest2 = "1", 'Heartbeat Test2');
+
+
+######################################
+###Forgot Password/Account Recovery###
+######################################
