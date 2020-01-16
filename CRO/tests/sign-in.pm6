@@ -10,7 +10,7 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
-    email       TEXT,
+    email       TEXT type UNIQUE,
     password    TEXT,
     date        TEXT,
     code	    INT,
@@ -18,13 +18,19 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     )
     STATEMENT
 
-    #Required for Testing Succesful Login
-    #$sth = $dbh.prepare(q:to/STATEMENT/);
-        #INSERT INTO accounts (username, email, password, date, code, verified)
-        #VALUES ( ?, ?, ?, ?, ?, ? )
-        #STATEMENT
-    
-    #$sth.execute("username", "test@test.com", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "10/14/17", "102842", "FALSE");
+#Required for Testing Succesful Login
+#$sth = $dbh.prepare(q:to/STATEMENT/);
+    #INSERT INTO accounts (username, email, password, date, code, verified)
+    #VALUES ( ?, ?, ?, ?, ?, ? )
+    #STATEMENT
+
+$sth = $dbh.prepare(q:to/STATEMENT/);
+    CREATE TABLE IF NOT EXISTS password_recovery (
+        email   TEXT type UNIQUE,
+        token   TEXT type UNIQUE,
+        expired    DATE 
+    )
+    STATEMENT
 
 
 sub account-made($username, $email, $password) is export {
@@ -70,3 +76,32 @@ sub login($username, $password) is export {
         return $sth.execute($username, $hashlogin);
 }
 
+sub account_exists($email) is export {
+    #Search to see if Email Exists
+    $sth = $dbh.prepare(q:to/STATEMENT/);
+            select email from accounts WHERE email = (?)
+            STATEMENT
+
+    return $sth.execute($email);
+}
+
+sub add_recovery($email) is export {
+     #Add Entry to Recover Table
+    $sth = $dbh.prepare(q:to/STATEMENT/);
+            INSERT INTO password_recovery (email, token, expired)
+            VALUES (?, ?, ?)
+            STATEMENT
+    
+    #Generate Random Crap
+    
+    
+    #Get Date and Add 48 Hours
+    my $date = DateTime.now.later(:2days);
+
+    return $sth.execute($email, $token, $date);
+}
+   
+   
+
+
+    #Send Email

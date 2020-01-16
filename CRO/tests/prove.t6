@@ -3,7 +3,7 @@ use sign-in;
 use Test; 
 
 #Plan
-plan 8; 
+plan 9; 
 
 ##############################################
 ##Tests for Verification/Creation of Account##
@@ -45,6 +45,7 @@ ok($login-inc = "0", 'Incorrect Info Login');
 ##Checking if Application is Responding##
 #########################################
 
+#Will Check if Registering and Logging in is Possible.
 my $heartbeat = account-made("Hello", "test@test.com", "secret");
 ok($heartbeat = "1", 'Heartbeat Test1');
 
@@ -52,6 +53,13 @@ my $heartbeattest2 = login("Hello", "secret");
 ok($heartbeattest2 = "1", 'Heartbeat Test2');
 
 
+
 ######################################
 ###Forgot Password/Account Recovery###
 ######################################
+
+my $exists = account_exists("test@test.com");
+ok($exists = "1", 'Account Exists');
+
+my $recover = add_recovery("test@test.com");
+ok($recover = "1", 'Account Added')
