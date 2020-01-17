@@ -2,6 +2,7 @@
 use Digest::SHA256::Native;
 use DBIish;
 use Email::Valid;
+use Net::SMTP;
 
 
 #Test Database
@@ -24,11 +25,11 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     #VALUES ( ?, ?, ?, ?, ?, ? )
     #STATEMENT
 
-$sth = $dbh.prepare(q:to/STATEMENT/);
+$sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS password_recovery (
         email   TEXT type UNIQUE,
         token   TEXT type UNIQUE,
-        expired    DATE 
+        expired    TEXt 
     )
     STATEMENT
 
@@ -92,16 +93,12 @@ sub add_recovery($email) is export {
             VALUES (?, ?, ?)
             STATEMENT
     
-    #Generate Random Crap
-    
-    
+    #Generate Random Crap | Hopefully wont generate same thing otherwise big error.
+    my $token = ("a".."z","A".."Z",0..9).flat.roll(22).join;
+
     #Get Date and Add 48 Hours
-    my $date = DateTime.now.later(:2days);
+    my $date = DateTime.now.later(:2days).Str;
 
     return $sth.execute($email, $token, $date);
 }
    
-   
-
-
-    #Send Email

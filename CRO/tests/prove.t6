@@ -3,7 +3,7 @@ use sign-in;
 use Test; 
 
 #Plan
-plan 9; 
+plan 10; 
 
 ##############################################
 ##Tests for Verification/Creation of Account##
