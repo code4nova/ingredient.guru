@@ -1,7 +1,4 @@
 # Perl6 Cro Experimentation 
 
-### Simple Webserver 
-*  Using SQLite3 Implementation Instead of PostgreSQL
-*  Testing for Ingredient.Guru Final Website
-
-MORE TO COME IN THE FUTURE
+### First Cookie Implementation
+This cookie implementation was the old method of doing cookies. Now we do cookies using the Cro::Auth module to create the session object.

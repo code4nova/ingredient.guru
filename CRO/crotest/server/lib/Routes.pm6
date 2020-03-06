@@ -40,6 +40,13 @@ sub routes() is export {
             static 'static', @path;
         }
         
+<<<<<<< HEAD
+=======
+        get -> 'css' {
+            static 'static/style.css';
+        }
+
+>>>>>>> f5e9a0d2688805fc067639cff4544a49b3fc88ce
         #Retrieve Info From register.html   
         post -> 'register' {
             request-body -> (:$username,:$email,:$password) {
@@ -75,8 +82,29 @@ sub routes() is export {
             }
         }
         #Authentication
+<<<<<<< HEAD
         post -> 'login' {
             #Retrieving Login Variables
+=======
+        get -> 'login', :$authtoken is cookie {
+            with $authtoken {
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+                    select user from tokens where hash = (?)
+                    STATEMENT 
+                    
+                $sth.execute($authtoken);
+                my $result = $sth.allrows;
+
+                if $result.elems >= 1 {
+                    content 'text/html','Successful Login: Welcome' ~ " " ~$result[0] ~ '<br><a href="/logout">Logout</a>';
+                }else {
+                    content 'text/html', 'BAD Boi';
+                }
+            }
+            else {static 'static/signin.html'}
+        }
+        post -> 'login' , 'authenticate' {
+>>>>>>> f5e9a0d2688805fc067639cff4544a49b3fc88ce
             request-body -> (:$userlog,:$passlog) {
             
                 #Hash Password At Login
@@ -115,6 +143,9 @@ sub routes() is export {
                 }
             }
         }
+	post -> 'logout' {
+		#ADD DELETE COOKIE HERE
+	}
     }
 }
 

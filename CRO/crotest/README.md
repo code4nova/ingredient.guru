@@ -1,7 +1,2 @@
-# Perl6 Cro Experimentation 
-
-### Simple Webserver 
-*  Using SQLite3 Implementation Instead of PostgreSQL
-*  Testing for Ingredient.Guru Final Website
-
-MORE TO COME IN THE FUTURE
+# Perl6 Crotest Experimentation 
+This is the old version of ingredient.guru. It is here as a relic to older versions. Go into the cro folder for the current working directory.
