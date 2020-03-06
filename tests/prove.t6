@@ -1,0 +1,65 @@
+use lib '.'; 
+use sign-in; 
+use Test; 
+
+#Plan
+plan 10; 
+
+##############################################
+##Tests for Verification/Creation of Account##
+##############################################
+
+#Working Test
+my $account-made = account-made("Hello", "test@test.com", "secret");
+ok($account-made = 1, 'Account Made');
+
+#Missing Value | Error Message is Long and Dumb
+my $account-missing = account-made("Hello", Nil, "secret");
+ok($account-missing = "DBDish::SQLite: Error: UNIQUE constraint failed: accounts.username (19)
+  in method execute at /usr/local/Cellar/rakudo-star/2019.03/share/perl6/site/sources/DE559529B32B6D348188B437156092A03C0433A1 (DBDish::SQLite::StatementHandle) line 45
+  in sub account-made at /Users/1013042/Repos/ingredient.guru/CRO/tests/sign-in.pm6 (sign-in) line 37
+  in block <unit> at prove.t6 line 18", 'Value Missing');
+
+#Correct Info | Email Correct
+my $account-email = email-valid("test@test.com");
+ok($account-email = True, 'Email Correct');
+
+#Incorrect Info | Email Incorrect
+my $email-inc = email-valid("notanemail");
+ok($email-inc = "False", 'Email Incorrect');
+
+###############################################
+###Tests for Authentication/Successful Login###
+###############################################
+
+#Successful Login
+my $login = login("Hello", "secret");
+ok($login = "1", 'Successful Login');
+
+#Incorrect Information
+my $login-inc = login("fakeusername", "badpassword");
+ok($login-inc = "0", 'Incorrect Info Login');
+
+
+#########################################
+##Checking if Application is Responding##
+#########################################
+
+#Will Check if Registering and Logging in is Possible.
+my $heartbeat = account-made("Hello", "test@test.com", "secret");
+ok($heartbeat = "1", 'Heartbeat Test1');
+
+my $heartbeattest2 = login("Hello", "secret");
+ok($heartbeattest2 = "1", 'Heartbeat Test2');
+
+
+
+######################################
+###Forgot Password/Account Recovery###
+######################################
+
+my $exists = account_exists("test@test.com");
+ok($exists = "1", 'Account Exists');
+
+my $recover = add_recovery("test@test.com");
+ok($recover = "1", 'Account Added')
