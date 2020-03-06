@@ -21,4 +21,4 @@ Contains the latest updated code with all the features
 Contains all the features required up to Issue #7. Mainly Focuses on Cookies
 
 ### test
-Will contain information on the majority of test performed, while performing test driven development.
+Will contain information on the majority of test performed, while performing "test driven development".
