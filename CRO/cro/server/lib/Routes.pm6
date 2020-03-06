@@ -14,7 +14,7 @@ my $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS accounts (
     ID          INTEGER PRIMARY KEY AUTOINCREMENT,
     username    TEXT type UNIQUE,
-    email       TEXT,
+    email       TEXT type UNIQUE,
     password    TEXT,
     date        TEXT,
     code	INT,
@@ -27,6 +27,15 @@ $sth = $dbh.do(q:to/STATEMENT/);
     CREATE TABLE IF NOT EXISTS tokens (
     user        PRIMARY KEY,
     hash        TEXT
+    )
+    STATEMENT
+
+#Password Reset
+$sth = $dbh.do(q:to/STATEMENT/);
+    CREATE TABLE IF NOT EXISTS reset (
+    email	TEXT,
+    token	TEXT,
+    date	TEXT
     )
     STATEMENT
 
@@ -61,6 +70,10 @@ sub routes() is export {
 	get -> 'confirm' {
 		static 'static/confirm.html';
 		}
+
+	get -> 'reset' {
+		static 'static/reset.html';
+	}
 
         #Retrieve Info From register.html   
         post -> 'register', 'post' {
@@ -180,6 +193,64 @@ sub routes() is export {
 	    $s.username = Nil;
 	    static 'static/signin.html'
 	}
+	
+	post -> 'reset' {
+	    request-body -> (:$email) {
+		#Check to see if email exists in accounts
+		#If Exists then send email
+		#If not exists post email not found
+
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+	    	    select email from accounts WHERE email = (?) 
+                    STATEMENT
+
+		$sth.execute($email);
+                my $results = $sth.allrows;
+		
+		if $results == 1 {
+			content 'text/html','Successful Email sent' ~ '<br><a href="/">Home</a>';
+			
+			#Prep email
+			my $from = "ingredient@arltech.com";
+			my $to = "$email";
+			my $token = ("a".."z","A".."Z",0..9).flat.roll(22).join;
+                	my $date = Str(DateTime.now);
+			my $message = "Click here http://ingredientguru.arltechinnovation.us/reset/$token";
+
+			#Send email
+			my $client = Net::SMTP.new(:server("127.0.0.1"), :port(25), :debug);
+			$client.send($from, $to, $message);
+			$client.quit;
+
+			$sth = $dbh.prepare(q:to/STATEMENT/);
+			    INSERT INTO reset (email, token, date)
+			    VALUES ( ?, ?, ? )
+			    STATEMENT
+			$sth.execute($email, $token, $date);
+			
+			# DELETE ENTRY AFTER TWO DAYS
+		
+		} else {
+		   	content 'text/html', "Email does not exist";
+		}
+	    }
+	}
+	get -> 'reset' , $token { 
+                $sth = $dbh.prepare(q:to/STATEMENT/);
+	    	    select email from reset WHERE token = (?) 
+                    STATEMENT
+		
+		$sth.execute($token);
+		my $results = $sth.allrows;
+		if $results == 1 {
+			#Redirect to password_rest_prompt.html | post called reset password
+		}
+			content 'text/html','No Email is Associated with that Particular Token';
+	}
+	post -> 'resetpassword' {
+		request-body -> (:$password, :$confirm_password) {
+			# Check that passwords match based on the email above update password.
+	    }
+	}
     }
 }
-
